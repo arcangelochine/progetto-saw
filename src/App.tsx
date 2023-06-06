@@ -13,7 +13,7 @@ import {
   User,
 } from "./pages";
 import { AuthProvider } from "./core";
-import PrivateRoute from "./components/utils/PrivateRoute";
+import { PrivateRoute } from "./components";
 
 function App() {
   return (

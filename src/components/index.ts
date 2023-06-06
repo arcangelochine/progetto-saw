@@ -1,3 +1,3 @@
-import { Navbar } from "./utils";
+import { Navbar, PrivateRoute } from "./utils";
 
-export { Navbar };
+export { Navbar, PrivateRoute };
