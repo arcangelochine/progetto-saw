@@ -5,18 +5,21 @@ import {
 } from "firebase/firestore";
 
 export class User {
-  private username: string;
+  private username: string; // lower case (case-insensitive)
+  private displayName: string; // case sensitive
   private email: string;
   private permission: number;
   private registeredAt: Date;
 
   constructor(
     username: string,
+    displayName: string,
     email: string,
     permission: number,
     registeredAt: Date
   ) {
     this.username = username;
+    this.displayName = displayName;
     this.email = email;
     this.permission = permission;
     this.registeredAt = registeredAt;
@@ -24,6 +27,10 @@ export class User {
 
   getUsername() {
     return this.username;
+  }
+
+  getDisplayName() {
+    return this.displayName;
   }
 
   getEmail() {
@@ -47,9 +54,10 @@ export const userConverter = {
   toFirestore: (user: User) => {
     return {
       username: user.getUsername(),
+      display_name: user.getDisplayName(),
       email: user.getEmail(),
       permission: user.getPerm(),
-      registeredAt: Timestamp.fromDate(user.getRegisterDate()),
+      registered_at: Timestamp.fromDate(user.getRegisterDate()),
     };
   },
   fromFirestore: (
@@ -59,9 +67,10 @@ export const userConverter = {
     const data = snapshot.data(options);
     return new User(
       data.username,
+      data.display_name,
       data.email,
       data.permission,
-      new Date(data.registeredAt)
+      new Date(data.registered_at)
     );
   },
 };
