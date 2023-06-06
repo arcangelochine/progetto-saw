@@ -26,6 +26,14 @@ function App() {
           <Route path="/login" element={<Login />} />
 
           <Route
+            path="/admin"
+            element={
+              <PrivateRoute>
+                <Admin />
+              </PrivateRoute>
+            }
+          />
+          <Route
             path="/home"
             element={
               <PrivateRoute>
@@ -50,18 +58,10 @@ function App() {
             }
           />
           <Route
-            path="/inventory/:id/stats"
+            path="/inventory/:id/analytics"
             element={
               <PrivateRoute>
                 <Analytics />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/admin"
-            element={
-              <PrivateRoute>
-                <Admin />
               </PrivateRoute>
             }
           />
