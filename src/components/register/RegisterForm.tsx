@@ -13,6 +13,7 @@ import {
   UsernameTooShortError,
   register,
 } from "../../config/Auth";
+import { AuthBody, AuthHeader } from "../utils/Form";
 
 const MIN_USERNAME_LENGTH = 3;
 const MAX_USERNAME_LENGTH = 32;
@@ -230,59 +231,70 @@ const RegisterForm = () => {
   };
 
   return (
-    <Form>
-      {authState.error && <>{authState.errorMessage}</>}
-      <InputWithLabel
-        label="Username"
-        type="text"
-        length={MAX_USERNAME_LENGTH}
-        isValid={formValidation.username}
-        errorMessage={formErrorMessage.username}
-        onChange={(e) => {
-          setFormData({ ...formData, username: e.target.value });
-        }}
-        onFocus={() => {
-          setFormValidation({ ...formValidation, username: true });
-        }}
-      />
-      <InputWithLabel
-        label="Email"
-        type="text"
-        isValid={formValidation.email}
-        errorMessage={formErrorMessage.email}
-        onChange={(e) => {
-          setFormData({ ...formData, email: e.target.value });
-        }}
-        onFocus={() => {
-          setFormValidation({ ...formValidation, email: true });
-        }}
-      />
-      <InputWithLabel
-        label="Password"
-        type="password"
-        isValid={formValidation.password}
-        errorMessage={formErrorMessage.password}
-        onChange={(e) => {
-          setFormData({ ...formData, password: e.target.value });
-        }}
-        onFocus={() => {
-          setFormValidation({ ...formValidation, password: true });
-        }}
-      />
-      <InputWithLabel
-        label="Confirm password"
-        type="password"
-        isValid={formValidation.confirmPassword}
-        errorMessage={formErrorMessage.confirmPassword}
-        onChange={(e) => {
-          setFormData({ ...formData, confirmPassword: e.target.value });
-        }}
-        onFocus={() => {
-          setFormValidation({ ...formValidation, confirmPassword: true });
-        }}
-      />
-      <PrimaryButton onClick={submit}>Registrati</PrimaryButton>
-    </Form>
+    <AuthBody>
+      <AuthHeader>
+        logo
+        <h1>iSort</h1>
+      </AuthHeader>
+      <Form>
+        {authState.error && <>{authState.errorMessage}</>}
+        <InputWithLabel
+          label="Username"
+          type="text"
+          length={MAX_USERNAME_LENGTH}
+          isValid={formValidation.username}
+          errorMessage={formErrorMessage.username}
+          onChange={(e) => {
+            setFormData({ ...formData, username: e.target.value });
+          }}
+          onFocus={() => {
+            setFormValidation({ ...formValidation, username: true });
+          }}
+        />
+        <InputWithLabel
+          label="Email"
+          type="text"
+          isValid={formValidation.email}
+          errorMessage={formErrorMessage.email}
+          onChange={(e) => {
+            setFormData({ ...formData, email: e.target.value });
+          }}
+          onFocus={() => {
+            setFormValidation({ ...formValidation, email: true });
+          }}
+        />
+        <InputWithLabel
+          label="Password"
+          type="password"
+          isValid={formValidation.password}
+          errorMessage={formErrorMessage.password}
+          onChange={(e) => {
+            setFormData({ ...formData, password: e.target.value });
+          }}
+          onFocus={() => {
+            setFormValidation({ ...formValidation, password: true });
+          }}
+        />
+        <InputWithLabel
+          label="Confirm password"
+          type="password"
+          isValid={formValidation.confirmPassword}
+          errorMessage={formErrorMessage.confirmPassword}
+          onChange={(e) => {
+            setFormData({ ...formData, confirmPassword: e.target.value });
+          }}
+          onFocus={() => {
+            setFormValidation({ ...formValidation, confirmPassword: true });
+          }}
+        />
+        <PrimaryButton
+          style={{ width: "100%", marginTop: "10px" }}
+          onClick={submit}
+        >
+          Registrati
+        </PrimaryButton>
+      </Form>
+    </AuthBody>
   );
 };
 
