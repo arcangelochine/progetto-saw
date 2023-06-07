@@ -7,6 +7,10 @@ const ButtonProps = styled.button`
 
   transition: transform 0.3s, box-shadow 0.3s;
 
+  font-size: 14px;
+  padding: 10px;
+  border:none;
+
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
@@ -19,11 +23,11 @@ const ButtonProps = styled.button`
 `;
 
 export const PrimaryButton = styled(ButtonProps)`
-  background-color: #99d1d6;
-  color: #103003;
+  background-color: var(--primary);
+  color: var(--bg);
 `;
 
 export const SecondaryButton = styled(ButtonProps)`
-  background-color: #dbe5fb;
-  color: #103003;
+  background-color: var(--secondary);
+  color: var(--text);
 `;
