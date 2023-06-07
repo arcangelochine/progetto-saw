@@ -95,6 +95,7 @@ export const register = async (
   confirm: string
 ) => {
   const lower = username.toLowerCase();
+  const lowerEmail = email.toLowerCase();
 
   if (!isPasswordConfirmed(password, confirm)) throw new ConfirmPasswordError();
 
@@ -104,10 +105,10 @@ export const register = async (
 
   if (!(await isUsernameUnique(lower))) throw new UsernameAlreadyInUseError();
 
-  return createUserWithEmailAndPassword(auth, email, password)
+  return createUserWithEmailAndPassword(auth, lowerEmail, password)
     .then(() => {
       // Creo un nuovo utente
-      const user = new User(lower, username, email, 10, new Date());
+      const user = new User(lower, username, lowerEmail, 10, new Date());
 
       // Aggiungo l'utente al database
       addDoc(users, user).catch((error) => {
