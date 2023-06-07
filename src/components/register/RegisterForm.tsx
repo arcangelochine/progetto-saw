@@ -11,7 +11,6 @@ import {
   UsernameAlreadyInUseError,
   UsernameTooLongError,
   UsernameTooShortError,
-  getAllUsernames,
   register,
 } from "../../config/Auth";
 
@@ -45,9 +44,6 @@ interface AuthState {
 const RegisterForm = () => {
   const navigate = useNavigate();
 
-  const [usernames, setUsernames] = useState(new Array<String>());
-  const [emails, setEmails] = useState(new Array<String>());
-
   // Campi del form
   const [formData, setFormData] = useState<RegisterData<string>>({
     username: "",
@@ -55,6 +51,7 @@ const RegisterForm = () => {
     password: "",
     confirmPassword: "",
   });
+
   // Convalida dei campi del form
   const [formValidation, setFormValidation] = useState<RegisterData<boolean>>({
     username: true,
@@ -62,6 +59,7 @@ const RegisterForm = () => {
     password: true,
     confirmPassword: true,
   });
+
   // Messaggi di errore dei campi del form
   const [formErrorMessage, setFormErrorMessage] = useState<
     RegisterData<string>
@@ -71,6 +69,7 @@ const RegisterForm = () => {
     password: REQUIRED_ERROR,
     confirmPassword: REQUIRED_ERROR,
   });
+
   // Stato dell'autenticazione
   const [authState, setAuthState] = useState<AuthState>({
     loading: false,
@@ -78,125 +77,83 @@ const RegisterForm = () => {
     errorMessage: UNKNOWN_ERROR,
   });
 
-  // Validazione username
-  useEffect(() => {
-    const username = formData.username;
-    let valid = true;
-
-    if (username.length < MIN_USERNAME_LENGTH) {
-      valid = false;
-      setFormErrorMessage({ ...formErrorMessage, username: TOO_SHORT_ERROR });
-    }
-
-    if (username.length > MAX_USERNAME_LENGTH) {
-      valid = false;
-      setFormErrorMessage({ ...formErrorMessage, username: TOO_LONG_ERROR });
-    }
-
-    if (usernames.includes(username)) {
-      valid = false;
-      setFormErrorMessage({
-        ...formErrorMessage,
-        username: NOT_AVAILABLE_ERROR,
-      });
-    }
-
-    setFormValidation({ ...formValidation, username: valid });
-  }, [formData, formErrorMessage, formValidation, usernames]);
-
-  // Validazione email
-  useEffect(() => {
-    const email = formData.email;
-    let valid = true;
-
-    if (emails.includes(email)) {
-      valid = false;
-      setFormErrorMessage({ ...formErrorMessage, email: ALREADY_IN_USE_ERROR });
-    }
-
-    setFormValidation({ ...formValidation, email: valid });
-  }, [formData, emails, formValidation, formErrorMessage]);
-
-  // Validazione password
-  useEffect(() => {
-    const password = formData.password;
-    const confirmPassword = formData.confirmPassword;
-    let valid = true;
-
-    if (confirmPassword.length)
-      if (password !== confirmPassword) {
-        valid = false;
-        setFormErrorMessage({
-          ...formErrorMessage,
-          confirmPassword: NOT_EQUAL_ERROR,
-        });
-      }
-
-    setFormValidation({ ...formValidation, confirmPassword: valid });
-  }, [formData, formErrorMessage, formValidation]);
-
-  // Scarico la lista di tutti gli username
-  useEffect(() => {
-    getAllUsernames().then((res) => {
-      setUsernames(res);
-    });
-  }, []);
-
   const submit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
 
     // anti-spam
     if (authState.loading) return;
 
-    setAuthState({ ...authState, loading: true });
+    setAuthState({ ...authState, loading: true, error: false });
 
-    if (!formData.username.length) {
-      setFormValidation({ ...formValidation, username: false });
-      setFormErrorMessage({ ...formErrorMessage, username: REQUIRED_ERROR });
+    const username = formData.username;
+    const email = formData.email;
+    const password = formData.password;
+    const confirmPassword = formData.confirmPassword;
+
+    let errorMessage: RegisterData<string> = formErrorMessage;
+
+    let valid: RegisterData<boolean> = formValidation;
+
+    // Validazione (offline) username
+    if (username.length === 0) {
+      errorMessage.username = REQUIRED_ERROR;
+      valid.username = false;
     }
 
-    if (!formData.email.length) {
-      setFormValidation({ ...formValidation, email: false });
-      setFormErrorMessage({ ...formErrorMessage, email: REQUIRED_ERROR });
+    if (username.length > 0 && username.length < MIN_USERNAME_LENGTH) {
+      errorMessage.username = TOO_SHORT_ERROR;
+      valid.username = false;
     }
 
-    if (!formData.password.length) {
-      setFormValidation({ ...formValidation, password: false });
-      setFormErrorMessage({ ...formErrorMessage, password: REQUIRED_ERROR });
+    if (username.length > MAX_USERNAME_LENGTH) {
+      errorMessage.username = TOO_LONG_ERROR;
+      valid.username = false;
     }
 
-    if (!formData.confirmPassword.length) {
-      setFormValidation({ ...formValidation, confirmPassword: false });
-      setFormErrorMessage({
-        ...formErrorMessage,
-        confirmPassword: REQUIRED_ERROR,
-      });
+    // Validazione (offline) email
+    if (email.length === 0) {
+      errorMessage.email = REQUIRED_ERROR;
+      valid.email = false;
     }
 
+    // Validazione (offline) password
+    if (password.length === 0) {
+      errorMessage.password = REQUIRED_ERROR;
+      valid.password = false;
+    }
+
+    // Validazione (offline) confirmPassword
+    if (confirmPassword.length === 0) {
+      errorMessage.confirmPassword = REQUIRED_ERROR;
+      valid.confirmPassword = false;
+    }
+
+    if (confirmPassword.length)
+      if (password !== confirmPassword) {
+        errorMessage.confirmPassword = NOT_EQUAL_ERROR;
+        valid.confirmPassword = false;
+      }
+
+    // Almeno un campo non è valido
     if (
-      !formValidation.username ||
-      !formValidation.email ||
-      !formValidation.password ||
-      !formValidation.confirmPassword
+      !valid.username ||
+      !valid.email ||
+      !valid.password ||
+      !valid.confirmPassword
     ) {
+      setFormErrorMessage(errorMessage);
+      setFormValidation(valid);
       setAuthState({ ...authState, loading: false });
       return;
     }
 
-    register(
-      formData.username,
-      formData.email,
-      formData.password,
-      formData.confirmPassword
-    )
+    // Tutti i campi sono validi (offline)
+    register(username, email, password, confirmPassword)
       .then(() => {
         // Registrato con successo
         navigate("/home");
       })
       .catch((err) => {
-        // Aggiorno la lista degli username
-        getAllUsernames().then((res) => setUsernames(res));
-
         // Problemi durante la registrazione (https://www.youtube.com/watch?v=G8oez6NoPGM)
         switch (err.constructor) {
           case UsernameAlreadyInUseError:
@@ -221,7 +178,6 @@ const RegisterForm = () => {
             setFormValidation({ ...formValidation, username: false });
             break;
           case EmailAlreadyInUseError:
-            setEmails(emails.concat([formData.email.toLowerCase()]));
             setFormErrorMessage({
               ...formErrorMessage,
               email: ALREADY_IN_USE_ERROR,
