@@ -294,6 +294,7 @@ const RegisterForm = () => {
           Registrati
         </PrimaryButton>
       </Form>
+      <span>Hai già un account? <a href="/login">Accedi</a></span>
     </AuthBody>
   );
 };
