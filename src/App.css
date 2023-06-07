@@ -20,6 +20,10 @@ h1 {
   font-weight: 700;
 }
 
+a {
+  color: var(--accent)
+}
+
 body {
   background-color: var(--bg);
   color: var(--text);
