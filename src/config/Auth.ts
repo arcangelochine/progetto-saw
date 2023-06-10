@@ -2,32 +2,60 @@ import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { auth, db } from "./firebase";
 import { User, userConverter } from "../entities";
 import {
+  Persistence,
   createUserWithEmailAndPassword,
+  setPersistence,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 
-// Errori in fase di registrazione
-export class BadUsernameError extends Error {}
-export class UsernameAlreadyInUseError extends Error {}
-export class UsernameTooShortError extends Error {}
-export class UsernameTooLongError extends Error {}
+// Persistenza dell'autenticazione
+const persistence: Persistence = {
+  type: "SESSION",
+};
 
-export class EmailAlreadyInUseError extends Error {}
-export class MissingEmailError extends Error {}
-export class BadEmailError extends Error {}
+type ErrorType =
+  | "MISSING"
+  | "TOO_LONG"
+  | "TOO_SHORT"
+  | "NOT_EQUAL"
+  | "TOO_WEAK"
+  | undefined;
+type WhichType = "USERNAME" | "PASSWORD" | "EMAIL" | "CONFIRM";
 
-export class MissingPasswordError extends Error {}
-export class BadPasswordError extends Error {}
-export class ConfirmPasswordError extends Error {}
+// Errori in fase di autenticazione
+export class BadCredentialError extends Error {
+  private type: ErrorType;
+  private which: WhichType;
 
-// Errori in fase di accesso
-export class MissingUsernameError extends Error {}
-export class WrongUsernameOrPasswordError extends Error {}
+  constructor(type: ErrorType = undefined, which: WhichType) {
+    super();
+
+    this.type = type;
+    this.which = which;
+  }
+
+  public getType = () => this.type;
+
+  public getWhich = () => this.which;
+}
+export class AlreadyInUseError extends Error {}
+export class WrongCredentialError extends Error {}
+export class ServerError extends Error {}
 
 const MIN_USERNAME_LENGTH = 3;
 const MAX_USERNAME_LENGTH = 32;
 
 const users = collection(db, "users").withConverter(userConverter);
+
+/**
+ *
+ * @param pwd1 Password
+ * @param pwd2 Conferma password
+ * @returns **true** se le password sono uguali, **false** altrimenti
+ */
+const isPasswordConfirmed = (pwd1: string, pwd2: string) => {
+  return pwd1 === pwd2;
+};
 
 /**
  *
@@ -54,16 +82,6 @@ const isUsernameUnique = async (username: string) => {
 
 /**
  *
- * @param pwd1 Password
- * @param pwd2 Conferma password
- * @returns **true** se le password sono uguali, **false** altrimenti
- */
-const isPasswordConfirmed = (pwd1: string, pwd2: string) => {
-  return pwd1 === pwd2;
-};
-
-/**
- *
  * @param username Username
  * @returns Restituisce l'email corrispondente all'utente con username=**username** della collection **users**
  */
@@ -85,6 +103,55 @@ const getEmailOfUser = async (username: string) => {
 
 /**
  *
+ * @param email Email
+ * @param password Password
+ * @returns Restituisce la Promise fornita da **firebase** con gestione degli errori
+ */
+const singUp = async (email: string, password: string) => {
+  const lower = email.toLowerCase();
+
+  return createUserWithEmailAndPassword(auth, lower, password).catch(
+    (error) => {
+      switch (error.code) {
+        case "auth/email-already-in-use":
+          throw new AlreadyInUseError();
+        case "auth/missing-password":
+          throw new BadCredentialError("MISSING", "PASSWORD");
+        case "auth/missing-email":
+          throw new BadCredentialError("MISSING", "EMAIL");
+        case "auth/invalid-email":
+          throw new BadCredentialError(undefined, "EMAIL");
+        case "auth/weak-password":
+          throw new BadCredentialError("TOO_WEAK", "PASSWORD");
+        default:
+          throw new ServerError();
+      }
+    }
+  );
+};
+
+/**
+ *
+ * @param email Email
+ * @param password Password
+ * @returns Restituisce la Promise fornita da **firebase** con gestione degli errori
+ */
+const signIn = async (email: string, password: string) => {
+  const lower = email.toLowerCase();
+
+  return signInWithEmailAndPassword(auth, lower, password).catch((error) => {
+    switch (error.code) {
+      case "auth/invalid-email":
+      case "auth/wrong-password":
+        throw new WrongCredentialError();
+      default:
+        throw new ServerError();
+    }
+  });
+};
+
+/**
+ *
  * @param username Username
  * @param email Email
  * @param password Password
@@ -99,50 +166,56 @@ export const register = async (
   password: string,
   confirm: string
 ) => {
+  // Campi mancanti
+  if (username.length === 0)
+    throw new BadCredentialError("MISSING", "USERNAME");
+
+  if (email.length === 0) throw new BadCredentialError("MISSING", "EMAIL");
+
+  if (password.length === 0)
+    throw new BadCredentialError("MISSING", "PASSWORD");
+
+  if (confirm.length === 0) throw new BadCredentialError("MISSING", "CONFIRM");
+
+  // Caratteri speciali non consentiti per lo username
+  if (username.includes("@"))
+    throw new BadCredentialError(undefined, "USERNAME");
+
+  // Username troppo corto
+  if (username.length < MIN_USERNAME_LENGTH)
+    throw new BadCredentialError("TOO_SHORT", "USERNAME");
+
+  // Username troppo lungo
+  if (username.length > MAX_USERNAME_LENGTH)
+    throw new BadCredentialError("TOO_LONG", "USERNAME");
+
+  // Password non confermata
+  if (!isPasswordConfirmed(password, confirm))
+    throw new BadCredentialError("NOT_EQUAL", "CONFIRM");
+
+  // Username e password vengono salvati in lower case
   const lower = username.toLowerCase();
   const lowerEmail = email.toLowerCase();
 
-  // caratteri speciali non consentiti
-  if (lower.includes("@")) throw new BadUsernameError();
+  // Unicità username
+  const unique = await isUsernameUnique(lower);
 
-  if (!isPasswordConfirmed(password, confirm)) throw new ConfirmPasswordError();
+  if (!unique) throw new AlreadyInUseError();
 
-  if (username.length < MIN_USERNAME_LENGTH) throw new UsernameTooShortError();
+  // Lo username è unico
+  return setPersistence(auth, persistence)
+    .then(async () => {
+      return singUp(email, password).then(() => {
+        // Registrazione avvenuta con successo
+        // Creo un nuovo utente
+        const user = new User(lower, username, lowerEmail, 10, new Date());
 
-  if (username.length > MAX_USERNAME_LENGTH) throw new UsernameTooLongError();
-
-  if (!(await isUsernameUnique(lower))) throw new UsernameAlreadyInUseError();
-
-  return createUserWithEmailAndPassword(auth, lowerEmail, password)
-    .then(() => {
-      // Creo un nuovo utente
-      const user = new User(lower, username, lowerEmail, 10, new Date());
-
-      // Aggiungo l'utente al database
-      addDoc(users, user).catch((error) => {
-        // todo: gestire errori addDoc
-        const errorCode = error.code;
-        const errorMessage = error.message;
-
-        console.log(errorCode, errorMessage);
-        console.log(error);
+        // Aggiungo l'utente al database (optimistic programming)
+        addDoc(users, user);
       });
     })
-    .catch((error) => {
-      switch (error.code) {
-        case "auth/email-already-in-use":
-          throw new EmailAlreadyInUseError();
-        case "auth/missing-email":
-          throw new MissingEmailError();
-        case "auth/invalid-email":
-          throw new BadEmailError();
-        case "auth/missing-password":
-          throw new MissingPasswordError();
-        case "auth/weak-password":
-          throw new BadPasswordError();
-        default:
-          throw new Error();
-      }
+    .catch(() => {
+      throw new ServerError();
     });
 };
 
@@ -155,34 +228,35 @@ export const register = async (
  * @note se l'utente non viene trovato nella collection **users** si assume che sia stata fornita una email
  */
 export const login = async (username_or_email: string, password: string) => {
+  // Campi mancanti
+  if (username_or_email.length === 0)
+    throw new BadCredentialError("MISSING", "USERNAME");
+
+  if (password.length === 0)
+    throw new BadCredentialError("MISSING", "PASSWORD");
+
+  // Lo username è salvato in lower case
   const lower = username_or_email.toLowerCase();
 
-  if (lower.length === 0) throw new MissingUsernameError();
-
-  if (password.length === 0) throw new MissingPasswordError();
-
+  // Cerco la email nel database
   const email = await getEmailOfUser(lower);
 
+  // Se non trovo la email nel database, assumo che **lower** sia la mail
   if (email.length === 0)
-    return signInWithEmailAndPassword(auth, username_or_email, password).catch(
-      (error) => {
-        switch (error.code) {
-          case "auth/invalid-email":
-          case "auth/wrong-password":
-            throw new WrongUsernameOrPasswordError();
-          default:
-            throw new Error();
-        }
-      }
-    );
-  else
-    return signInWithEmailAndPassword(auth, email, password).catch((error) => {
-      switch (error.code) {
-        case "auth/invalid-email":
-        case "auth/wrong-password":
-          throw new WrongUsernameOrPasswordError();
-        default:
-          throw new Error();
-      }
+    return setPersistence(auth, persistence)
+      .then(async () => {
+        return signIn(lower, password);
+      })
+      .catch(() => {
+        throw new ServerError();
+      });
+
+  // Ho trovato la email nel database
+  return setPersistence(auth, persistence)
+    .then(async () => {
+      return signIn(email, password);
+    })
+    .catch(() => {
+      throw new ServerError();
     });
 };
