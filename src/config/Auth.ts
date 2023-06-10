@@ -38,9 +38,21 @@ export class BadCredentialError extends Error {
 
   public getWhich = () => this.which;
 }
-export class AlreadyInUseError extends Error {}
+export class AlreadyInUseError extends Error {
+  private which: WhichType;
+
+  constructor(which: WhichType) {
+    super();
+
+    this.which = which;
+  }
+
+  public getWich = () => this.which;
+}
 export class WrongCredentialError extends Error {}
 export class ServerError extends Error {}
+
+export type AuthError = BadCredentialError | AlreadyInUseError | WrongCredentialError | ServerError;
 
 const MIN_USERNAME_LENGTH = 3;
 const MAX_USERNAME_LENGTH = 32;
@@ -114,7 +126,7 @@ const singUp = async (email: string, password: string) => {
     (error) => {
       switch (error.code) {
         case "auth/email-already-in-use":
-          throw new AlreadyInUseError();
+          throw new AlreadyInUseError("EMAIL");
         case "auth/missing-password":
           throw new BadCredentialError("MISSING", "PASSWORD");
         case "auth/missing-email":
@@ -200,7 +212,7 @@ export const register = async (
   // Unicità username
   const unique = await isUsernameUnique(lower);
 
-  if (!unique) throw new AlreadyInUseError();
+  if (!unique) throw new AlreadyInUseError("USERNAME");
 
   // Lo username è unico
   return setPersistence(auth, persistence)
