@@ -7,8 +7,8 @@ import {
   AuthHeader,
   Form,
   InputWithLabel,
+  PrimaryButton,
 } from "../utils";
-import { PrimaryButton } from "../utils";
 
 const UNKNOWN_ERROR = "Errore del server";
 const LOGIN_ERROR = "Credenziali errate";
