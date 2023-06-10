@@ -1,8 +1,13 @@
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { auth, db } from "./firebase";
 import { User, userConverter } from "../entities";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 
+// Errori in fase di registrazione
+export class BadUsernameError extends Error {}
 export class UsernameAlreadyInUseError extends Error {}
 export class UsernameTooShortError extends Error {}
 export class UsernameTooLongError extends Error {}
@@ -15,6 +20,10 @@ export class MissingPasswordError extends Error {}
 export class BadPasswordError extends Error {}
 export class ConfirmPasswordError extends Error {}
 
+// Errori in fase di accesso
+export class MissingUsernameError extends Error {}
+export class WrongUsernameOrPasswordError extends Error {}
+
 const MIN_USERNAME_LENGTH = 3;
 const MAX_USERNAME_LENGTH = 32;
 
@@ -22,37 +31,10 @@ const users = collection(db, "users").withConverter(userConverter);
 
 /**
  *
- * @returns Promise che restituisce tutti i documenti della collezione **users**
- * @warning Se la Promise fallisce, non è garantita la veridicità dei dati
- */
-export const getAllUsernames = async () => {
-  // La query restituisce tutti i documenti della collezione **users**
-  const queryDoc = query(users);
-
-  // L'array viene riempito se getDocs ha successo
-  let usernames = new Array<String>();
-
-  return getDocs(queryDoc)
-    .then((docs) => {
-      docs.forEach((doc) => {
-        // Lo **username** è case insensitive
-        usernames.push(doc.get("username"));
-      });
-
-      return usernames;
-    })
-    .catch(() => {
-      // Restituire un array vuoto può essere pericoloso: undefined behaviour
-      return usernames;
-    });
-};
-
-/**
- *
  * @param username Username da verificare
  * @returns Restituisce una Promise che determina se **username** è unico
  */
-export const isUsernameUnique = async (username: string) => {
+const isUsernameUnique = async (username: string) => {
   // Lo username è case insensitive
   const lower = username.toLowerCase();
 
@@ -76,8 +58,29 @@ export const isUsernameUnique = async (username: string) => {
  * @param pwd2 Conferma password
  * @returns **true** se le password sono uguali, **false** altrimenti
  */
-export const isPasswordConfirmed = (pwd1: string, pwd2: string) => {
+const isPasswordConfirmed = (pwd1: string, pwd2: string) => {
   return pwd1 === pwd2;
+};
+
+/**
+ *
+ * @param username Username
+ * @returns Restituisce l'email corrispondente all'utente con username=**username** della collection **users**
+ */
+const getEmailOfUser = async (username: string) => {
+  // Lo username è case insensitive
+  const lower = username.toLowerCase();
+
+  // La query restituisce i documenti della collezione users in cui data.username == lower
+  const queryDoc = query(users, where("username", "==", lower));
+
+  return getDocs(queryDoc)
+    .then((snap) => {
+      return snap.docs[0].data().getEmail();
+    })
+    .catch(() => {
+      return "";
+    });
 };
 
 /**
@@ -87,6 +90,8 @@ export const isPasswordConfirmed = (pwd1: string, pwd2: string) => {
  * @param password Password
  * @param confirm Conferma password
  * @returns Restituisce la Promise fornita da **firebase** per l'autenticazione con email e password
+ *
+ * @side Registra l'utente nella collection **users**
  */
 export const register = async (
   username: string,
@@ -96,6 +101,9 @@ export const register = async (
 ) => {
   const lower = username.toLowerCase();
   const lowerEmail = email.toLowerCase();
+
+  // caratteri speciali non consentiti
+  if (lower.includes("@")) throw new BadUsernameError();
 
   if (!isPasswordConfirmed(password, confirm)) throw new ConfirmPasswordError();
 
@@ -132,6 +140,45 @@ export const register = async (
           throw new MissingPasswordError();
         case "auth/weak-password":
           throw new BadPasswordError();
+        default:
+          throw new Error();
+      }
+    });
+};
+
+/**
+ *
+ * @param username_or_email Username o Email
+ * @param password Password
+ * @returns Restituisce la Promise fornita da **firebase** per l'autenticazione con email e password
+ *
+ * @note se l'utente non viene trovato nella collection **users** si assume che sia stata fornita una email
+ */
+export const login = async (username_or_email: string, password: string) => {
+  const lower = username_or_email.toLowerCase();
+
+  if (lower.length === 0) throw new MissingUsernameError();
+
+  if (password.length === 0) throw new MissingPasswordError();
+
+  const email = await getEmailOfUser(lower);
+
+  if (email.length === 0)
+    return signInWithEmailAndPassword(auth, username_or_email, password).catch(
+      (error) => {
+        switch (error.code) {
+          case "auth/wrong-password":
+            throw new WrongUsernameOrPasswordError();
+          default:
+            throw new Error();
+        }
+      }
+    );
+  else
+    return signInWithEmailAndPassword(auth, email, password).catch((error) => {
+      switch (error.code) {
+        case "auth/wrong-password":
+          throw new WrongUsernameOrPasswordError();
         default:
           throw new Error();
       }
