@@ -4,6 +4,7 @@ import { Form, InputWithLabel, PrimaryButton } from "../utils";
 import {
   BadEmailError,
   BadPasswordError,
+  BadUsernameError,
   ConfirmPasswordError,
   EmailAlreadyInUseError,
   MissingEmailError,
@@ -26,6 +27,7 @@ const TOO_LONG_ERROR = `Al massimo ${MAX_USERNAME_LENGTH} caratteri`;
 const ALREADY_IN_USE_ERROR = "Già in uso";
 const NOT_EQUAL_ERROR = "Le password non coincidono";
 
+const BAD_USERNAME_ERROR = "Non valido";
 const BAD_EMAIL_ERROR = "Non valida";
 const BAD_PASSWORD_ERROR = "Almeno 6 caratteri";
 
@@ -157,6 +159,13 @@ const RegisterForm = () => {
       .catch((err) => {
         // Problemi durante la registrazione (https://www.youtube.com/watch?v=G8oez6NoPGM)
         switch (err.constructor) {
+          case BadUsernameError:
+            setFormErrorMessage({
+              ...formErrorMessage,
+              username: BAD_USERNAME_ERROR,
+            });
+            setFormValidation({ ...formValidation, username: false });
+            break;
           case UsernameAlreadyInUseError:
             setFormErrorMessage({
               ...formErrorMessage,
