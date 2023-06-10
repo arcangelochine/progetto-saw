@@ -23,7 +23,7 @@ const ButtonProps = styled.button`
 `;
 
 export const PrimaryButton = styled(ButtonProps)`
-  background-color: var(--primary);
+  background-color: var(--text);
   color: var(--bg);
 `;
 
