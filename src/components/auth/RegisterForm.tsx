@@ -13,7 +13,7 @@ import {
   UsernameTooShortError,
   register,
 } from "../../config/Auth";
-import { AuthBody, AuthHeader } from "../utils/Form";
+import { AuthBody, AuthError, AuthHeader } from "../utils/Form";
 
 const MIN_USERNAME_LENGTH = 3;
 const MAX_USERNAME_LENGTH = 32;
@@ -237,7 +237,7 @@ const RegisterForm = () => {
         <h1>iSort</h1>
       </AuthHeader>
       <Form>
-        {authState.error && <>{authState.errorMessage}</>}
+        {authState.error && <AuthError>{authState.errorMessage}</AuthError>}
         <InputWithLabel
           label="Username"
           type="text"
@@ -294,7 +294,9 @@ const RegisterForm = () => {
           Registrati
         </PrimaryButton>
       </Form>
-      <span>Hai già un account? <a href="/login">Accedi</a></span>
+      <span>
+        Hai già un account? <a href="/login">Accedi</a>
+      </span>
     </AuthBody>
   );
 };

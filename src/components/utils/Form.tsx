@@ -22,6 +22,14 @@ export const AuthHeader = styled.div`
   font-weight: bold;
 `;
 
+export const AuthError = styled.div`
+  background-color: var(--error);
+  width: 100%;
+  padding: 10px;
+  color: var(--bg);
+  text-align: center;
+`;
+
 export const Form = styled(Column)`
   justify-content: center;
   align-items: center;
