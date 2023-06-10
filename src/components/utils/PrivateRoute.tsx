@@ -3,18 +3,16 @@ import { AuthContext } from "../../core";
 import { Navigate, useLocation } from "react-router-dom";
 
 interface PrivateRouteProps {
-  redirect?: string;
   children: JSX.Element;
 }
 
-const PrivateRoute = ({ redirect = "/login", children }: PrivateRouteProps) => {
+const PrivateRoute = ({ children }: PrivateRouteProps) => {
   const user = useContext(AuthContext);
   const location = useLocation();
 
-  if (!user)
-    return <Navigate to={redirect} state={{ from: location }} replace />;
+  if (user) return children;
 
-  return children!;
+  return <Navigate to="/login" state={{ from: location }} replace />;
 };
 
 export default PrivateRoute;
