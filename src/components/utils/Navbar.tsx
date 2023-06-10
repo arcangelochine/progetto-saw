@@ -1,4 +1,6 @@
+import { useContext } from "react";
 import styled from "styled-components";
+import { AuthContext } from "../../core";
 
 const NavbarContainer = styled.div`
   position: fixed;
@@ -29,25 +31,22 @@ const NavbarElement = styled.a`
   font-size: 16px;
   color: #103003;
 
-  transition: background-color .3s;
+  transition: background-color 0.3s;
 
   &:hover {
     background-color: #dde4f3;
   }
 `;
 
-interface NavbarProps {
-  isLogged?: boolean;
-  username?: string;
-}
+const Navbar = () => {
+  const user = useContext(AuthContext);
 
-const Navbar = ({ isLogged = false, username = "" }: NavbarProps) => {
   return (
     <NavbarContainer>
       <NavbarLeft>
-        {isLogged ? (
+        {user ? (
           <div>
-            <NavbarElement href={`/user/${username}`}>{username}</NavbarElement>
+            <NavbarElement href={`/edit`}>{user.email}</NavbarElement>
           </div>
         ) : (
           <div>
@@ -57,7 +56,7 @@ const Navbar = ({ isLogged = false, username = "" }: NavbarProps) => {
         )}
       </NavbarLeft>
       <NavbarRight>
-        {isLogged ? (
+        {user ? (
           <NavbarElement href="/logout">Esci</NavbarElement>
         ) : (
           <div>
