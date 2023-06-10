@@ -167,6 +167,7 @@ export const login = async (username_or_email: string, password: string) => {
     return signInWithEmailAndPassword(auth, username_or_email, password).catch(
       (error) => {
         switch (error.code) {
+          case "auth/invalid-email":
           case "auth/wrong-password":
             throw new WrongUsernameOrPasswordError();
           default:
@@ -177,6 +178,7 @@ export const login = async (username_or_email: string, password: string) => {
   else
     return signInWithEmailAndPassword(auth, email, password).catch((error) => {
       switch (error.code) {
+        case "auth/invalid-email":
         case "auth/wrong-password":
           throw new WrongUsernameOrPasswordError();
         default:
