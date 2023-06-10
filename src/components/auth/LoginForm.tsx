@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { WrongUsernameOrPasswordError, login } from "../../config/Auth";
+import { WrongCredentialError, login } from "../../config/Auth";
 import {
   AuthBody,
-  AuthError,
+  AuthErrorContainer,
   AuthHeader,
   Form,
   InputWithLabel,
-} from "../utils/Form";
+} from "../utils";
 import { PrimaryButton } from "../utils";
 
 const UNKNOWN_ERROR = "Errore del server";
@@ -66,7 +66,7 @@ const LoginForm = () => {
       .catch((err) => {
         // Problemi durante l'accesso
         switch (err.constructor) {
-          case WrongUsernameOrPasswordError:
+          case WrongCredentialError:
             setAuthState({
               ...authState,
               error: true,
@@ -83,7 +83,7 @@ const LoginForm = () => {
         }
       })
       .finally(() => {
-        //setAuthState({ ...authState, loading: false });
+        setAuthState({ ...authState, loading: false });
       });
   };
 
@@ -93,7 +93,9 @@ const LoginForm = () => {
         logo<h1>iSort</h1>
       </AuthHeader>
       <Form>
-        {authState.error && <AuthError>{authState.errorMessage}</AuthError>}
+        {authState.error && (
+          <AuthErrorContainer>{authState.errorMessage}</AuthErrorContainer>
+        )}
         <InputWithLabel
           label="Username/Email"
           type="text"
