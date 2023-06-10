@@ -1,20 +1,20 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Form, InputWithLabel, PrimaryButton } from "../utils";
 import {
-  BadEmailError,
-  BadPasswordError,
-  BadUsernameError,
-  ConfirmPasswordError,
-  EmailAlreadyInUseError,
-  MissingEmailError,
-  MissingPasswordError,
-  UsernameAlreadyInUseError,
-  UsernameTooLongError,
-  UsernameTooShortError,
+  AuthBody,
+  AuthErrorContainer,
+  AuthHeader,
+  Form,
+  InputWithLabel,
+  PrimaryButton,
+} from "../utils";
+import {
+  AlreadyInUseError,
+  AuthError,
+  BadCredentialError,
   register,
 } from "../../config/Auth";
-import { AuthBody, AuthError, AuthHeader } from "../utils/Form";
+import assert from "assert";
 
 const MIN_USERNAME_LENGTH = 3;
 const MAX_USERNAME_LENGTH = 32;
@@ -156,78 +156,124 @@ const RegisterForm = () => {
         // Registrato con successo
         navigate("/home");
       })
-      .catch((err) => {
+      .catch((err: AuthError) => {
         // Problemi durante la registrazione (https://www.youtube.com/watch?v=G8oez6NoPGM)
         switch (err.constructor) {
-          case BadUsernameError:
-            setFormErrorMessage({
-              ...formErrorMessage,
-              username: BAD_USERNAME_ERROR,
-            });
-            setFormValidation({ ...formValidation, username: false });
+          case BadCredentialError:
+            // Campi mal formati
+            assert(err instanceof BadCredentialError);
+            switch (err.getWhich()) {
+              case "USERNAME":
+                // Errore username
+                switch (err.getType()) {
+                  case "MISSING":
+                    setFormErrorMessage({
+                      ...formErrorMessage,
+                      username: REQUIRED_ERROR,
+                    });
+                    break;
+                  case "TOO_SHORT":
+                    setFormErrorMessage({
+                      ...formErrorMessage,
+                      username: TOO_SHORT_ERROR,
+                    });
+                    break;
+                  case "TOO_LONG":
+                    setFormErrorMessage({
+                      ...formErrorMessage,
+                      username: TOO_LONG_ERROR,
+                    });
+                    break;
+                  default:
+                    setFormErrorMessage({
+                      ...formErrorMessage,
+                      username: BAD_USERNAME_ERROR,
+                    });
+                    break;
+                }
+                setFormValidation({ ...formValidation, username: false });
+                break;
+              case "EMAIL":
+                // Errore email
+                switch (err.getType()) {
+                  case "MISSING":
+                    setFormErrorMessage({
+                      ...formErrorMessage,
+                      email: REQUIRED_ERROR,
+                    });
+                    break;
+                  default:
+                    setFormErrorMessage({
+                      ...formErrorMessage,
+                      email: BAD_EMAIL_ERROR,
+                    });
+                    break;
+                }
+                setFormValidation({ ...formValidation, email: false });
+                break;
+              case "PASSWORD":
+                // Errore password
+                switch (err.getType()) {
+                  case "MISSING":
+                    setFormErrorMessage({
+                      ...formErrorMessage,
+                      password: REQUIRED_ERROR,
+                    });
+                    break;
+                  default:
+                    setFormErrorMessage({
+                      ...formErrorMessage,
+                      password: BAD_PASSWORD_ERROR,
+                    });
+                }
+                setFormValidation({ ...formValidation, password: false });
+                break;
+              case "CONFIRM":
+                // Errore confirmPassword
+                switch (err.getType()) {
+                  case "MISSING":
+                    setFormErrorMessage({
+                      ...formErrorMessage,
+                      confirmPassword: REQUIRED_ERROR,
+                    });
+                    break;
+                  case "NOT_EQUAL":
+                    setFormErrorMessage({
+                      ...formErrorMessage,
+                      confirmPassword: NOT_EQUAL_ERROR,
+                    });
+                    break;
+                  default:
+                    break;
+                }
+                setFormValidation({
+                  ...formValidation,
+                  confirmPassword: false,
+                });
+                break;
+            }
             break;
-          case UsernameAlreadyInUseError:
-            setFormErrorMessage({
-              ...formErrorMessage,
-              username: NOT_AVAILABLE_ERROR,
-            });
-            setFormValidation({ ...formValidation, username: false });
-            break;
-          case UsernameTooShortError:
-            setFormErrorMessage({
-              ...formErrorMessage,
-              username: TOO_SHORT_ERROR,
-            });
-            setFormValidation({ ...formValidation, username: false });
-            break;
-          case UsernameTooLongError:
-            setFormErrorMessage({
-              ...formErrorMessage,
-              username: TOO_LONG_ERROR,
-            });
-            setFormValidation({ ...formValidation, username: false });
-            break;
-          case EmailAlreadyInUseError:
-            setFormErrorMessage({
-              ...formErrorMessage,
-              email: ALREADY_IN_USE_ERROR,
-            });
-            setFormValidation({ ...formValidation, email: false });
-            break;
-          case MissingEmailError:
-            setFormErrorMessage({
-              ...formErrorMessage,
-              email: REQUIRED_ERROR,
-            });
-            setFormValidation({ ...formValidation, email: false });
-            break;
-          case BadEmailError:
-            setFormErrorMessage({
-              ...formErrorMessage,
-              email: BAD_EMAIL_ERROR,
-            });
-            setFormValidation({ ...formValidation, email: false });
-            break;
-          case MissingPasswordError:
-            setFormErrorMessage({
-              ...formErrorMessage,
-              password: REQUIRED_ERROR,
-            });
-            setFormValidation({ ...formValidation, password: false });
-            break;
-          case BadPasswordError:
-            setFormErrorMessage({
-              ...formErrorMessage,
-              password: BAD_PASSWORD_ERROR,
-            });
-            setFormValidation({ ...formValidation, password: false });
-            break;
-          case ConfirmPasswordError:
-            setFormErrorMessage({
-              ...formErrorMessage,
-              confirmPassword: NOT_EQUAL_ERROR,
-            });
-            setFormValidation({ ...formValidation, confirmPassword: false });
+          case AlreadyInUseError:
+            // Email o username già in uso
+            assert(err instanceof AlreadyInUseError);
+            switch (err.getWhich()) {
+              case "USERNAME":
+                setFormErrorMessage({
+                  ...formErrorMessage,
+                  username: NOT_AVAILABLE_ERROR,
+                });
+                setFormValidation({ ...formValidation, username: false });
+                break;
+              case "EMAIL":
+                setFormErrorMessage({
+                  ...formErrorMessage,
+                  email: ALREADY_IN_USE_ERROR,
+                });
+                setFormValidation({ ...formValidation, email: false });
+                break;
+              default:
+                break;
+            }
             break;
           default:
             setAuthState({ ...authState, error: true });
@@ -246,7 +292,9 @@ const RegisterForm = () => {
         <h1>iSort</h1>
       </AuthHeader>
       <Form>
-        {authState.error && <AuthError>{authState.errorMessage}</AuthError>}
+        {authState.error && (
+          <AuthErrorContainer>{authState.errorMessage}</AuthErrorContainer>
+        )}
         <InputWithLabel
           label="Username"
           type="text"
