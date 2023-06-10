@@ -3,15 +3,14 @@ import { auth, db } from "./firebase";
 import { User, userConverter } from "../entities";
 import {
   Persistence,
+  browserSessionPersistence,
   createUserWithEmailAndPassword,
   setPersistence,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 
 // Persistenza dell'autenticazione
-const persistence: Persistence = {
-  type: "SESSION",
-};
+const persistence: Persistence = browserSessionPersistence;
 
 type ErrorType =
   | "MISSING"
@@ -52,7 +51,11 @@ export class AlreadyInUseError extends Error {
 export class WrongCredentialError extends Error {}
 export class ServerError extends Error {}
 
-export type AuthError = BadCredentialError | AlreadyInUseError | WrongCredentialError | ServerError;
+export type AuthError =
+  | BadCredentialError
+  | AlreadyInUseError
+  | WrongCredentialError
+  | ServerError;
 
 const MIN_USERNAME_LENGTH = 3;
 const MAX_USERNAME_LENGTH = 32;
