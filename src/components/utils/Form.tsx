@@ -22,7 +22,7 @@ export const AuthHeader = styled.div`
   font-weight: bold;
 `;
 
-export const AuthError = styled.div`
+export const AuthErrorContainer = styled.div`
   background-color: var(--error);
   width: 100%;
   padding: 10px;
