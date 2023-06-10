@@ -12,8 +12,8 @@ import {
   Register,
   User,
 } from "./pages";
-import { AuthProvider } from "./core";
 import { PrivateRoute } from "./components";
+import { AuthProvider } from "./core";
 
 function App() {
   return (
