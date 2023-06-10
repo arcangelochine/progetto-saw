@@ -47,7 +47,7 @@ export class AlreadyInUseError extends Error {
     this.which = which;
   }
 
-  public getWich = () => this.which;
+  public getWhich = () => this.which;
 }
 export class WrongCredentialError extends Error {}
 export class ServerError extends Error {}
