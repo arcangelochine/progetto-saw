@@ -7,6 +7,7 @@ import {
   createUserWithEmailAndPassword,
   setPersistence,
   signInWithEmailAndPassword,
+  signOut,
 } from "firebase/auth";
 
 // Persistenza dell'autenticazione
@@ -275,3 +276,11 @@ export const login = async (username_or_email: string, password: string) => {
       throw new ServerError();
     });
 };
+
+/**
+ * 
+ * @returns Restituisce la Promise fornita da **firebase** per il logout
+ */
+export const logout = async() => {
+  return signOut(auth);
+}
