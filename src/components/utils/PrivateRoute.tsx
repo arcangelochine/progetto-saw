@@ -4,15 +4,16 @@ import { Navigate, useLocation } from "react-router-dom";
 
 interface PrivateRouteProps {
   children: JSX.Element;
+  redirect?: string;
 }
 
-const PrivateRoute = ({ children }: PrivateRouteProps) => {
+const PrivateRoute = ({ children, redirect = "/login" }: PrivateRouteProps) => {
   const user = useContext(AuthContext);
   const location = useLocation();
 
   if (user) return children;
 
-  return <Navigate to="/login" state={{ from: location }} replace />;
+  return <Navigate to={redirect} state={{ from: location }} replace />;
 };
 
 export default PrivateRoute;

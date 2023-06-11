@@ -45,7 +45,7 @@ function App() {
           <Route
             path="/logout"
             element={
-              <PrivateRoute>
+              <PrivateRoute redirect="/">
                 <Logout />
               </PrivateRoute>
             }
