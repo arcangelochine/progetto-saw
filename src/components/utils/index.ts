@@ -1,4 +1,5 @@
 import { PrimaryButton, SecondaryButton } from "./Buttons";
+import { Column, Row, Center } from "./Containers";
 import {
   AuthBody,
   AuthHeader,
@@ -11,6 +12,7 @@ import PrivateRoute from "./PrivateRoute";
 import Spinner from "./Spinner";
 
 export { PrimaryButton, SecondaryButton };
+export { Column, Row, Center };
 export { AuthBody, AuthHeader, AuthErrorContainer, Form, InputWithLabel };
 export { Navbar };
 export { PrivateRoute };
