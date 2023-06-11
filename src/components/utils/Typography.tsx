@@ -12,3 +12,8 @@ export const Paragraph = styled.p`
 export const Accent = styled.span`
   color: var(--accent);
 `;
+
+export const Link = styled.a`
+  text-decoration: none;
+  color: var(--accent);
+`;
