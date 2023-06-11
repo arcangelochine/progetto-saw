@@ -12,7 +12,7 @@ import {
   Register,
   User,
 } from "./pages";
-import { PrivateRoute } from "./components";
+import { PrivateRoute } from "./components/utils";
 import { AuthProvider } from "./core";
 
 function App() {
