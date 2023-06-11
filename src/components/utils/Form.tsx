@@ -1,23 +1,12 @@
 import { styled } from "styled-components";
+import { Center, Column, Row } from "./Containers";
 
-const Column = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-`;
-
-export const AuthBody = styled(Column)`
+export const AuthBody = styled(Center)`
   min-height: 100vh;
-  justify-content: center;
-  align-items: center;
-
   gap: 10px;
 `;
 
-export const AuthHeader = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 0;
+export const AuthHeader = styled(Row)`
   align-items: center;
   font-weight: bold;
 `;
@@ -30,9 +19,7 @@ export const AuthErrorContainer = styled.div`
   text-align: center;
 `;
 
-export const Form = styled(Column)`
-  justify-content: center;
-  align-items: center;
+export const Form = styled(Center)`
   gap: 24px;
 `;
 
