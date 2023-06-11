@@ -25,9 +25,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   // Mentre sta caricando, mostra uno spinner
-  if (loading) {
-    return <Spinner />;
-  }
+  if (loading) return <Spinner />;
 
   return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>;
 };
