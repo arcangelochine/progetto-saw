@@ -1,13 +1,8 @@
 import { keyframes, styled } from "styled-components";
+import { Center } from "./Containers";
 
-const Column = styled.div`
-  display: flex;
-  flex-direction: column;
-
+const SpinnerBody = styled(Center)`
   height: 100vh;
-
-  align-items: center;
-  justify-content: center;
 `;
 
 const rotate = keyframes`
@@ -63,7 +58,7 @@ const SpinnerContainer = styled.div`
 
 const Spinner = () => {
   return (
-    <Column>
+    <SpinnerBody>
       <InfiniteRotate>
         <SpinnerContainer>
           <div>
@@ -75,7 +70,7 @@ const Spinner = () => {
           </div>
         </SpinnerContainer>
       </InfiniteRotate>
-    </Column>
+    </SpinnerBody>
   );
 };
 
