@@ -7,6 +7,7 @@ import {
   Inventory,
   Landing,
   Login,
+  Logout,
   NotFound,
   //Offline,
   Register,
@@ -38,6 +39,14 @@ function App() {
             element={
               <PrivateRoute>
                 <Home />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/logout"
+            element={
+              <PrivateRoute>
+                <Logout />
               </PrivateRoute>
             }
           />
