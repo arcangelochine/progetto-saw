@@ -278,9 +278,9 @@ export const login = async (username_or_email: string, password: string) => {
 };
 
 /**
- * 
+ *
  * @returns Restituisce la Promise fornita da **firebase** per il logout
  */
-export const logout = async() => {
+export const logout = async () => {
   return signOut(auth);
-}
+};
