@@ -1,40 +1,45 @@
 import { useContext } from "react";
 import styled from "styled-components";
 import { AuthContext } from "../../core";
+import { Row } from "./Containers";
+import { Link } from "./Typography";
 
-const NavbarContainer = styled.div`
-  position: fixed;
-  top: 0;
-  z-index: 100;
-  display: flex;
-  flex-direction: row;
+const NavbarContainer = styled(Row)`
   width: 100%;
   justify-content: space-between;
+  align-items: center;
 `;
 
 const NavbarLeft = styled.div`
   justify-self: flex-start;
-  height: auto;
 `;
 
 const NavbarRight = styled.div`
   justify-self: flex-end;
-  height: auto;
 `;
 
-const NavbarElement = styled.a`
+const NavbarElement = styled.div`
   display: inline-block;
-  padding: 12px;
-  text-align: center;
-  text-decoration: none;
-
+  padding: 10px 15px;
   font-size: 16px;
-  color: #103003;
 
+  color: var(--text);
+
+  @media only screen and (max-width: 768px) {
+    display: none;
+  }
+`;
+
+const NavbarLink = styled(Link)`
+  display: inline-block;
+  padding: 10px 15px;
+  font-size: 16px;
+
+  color: var(--text);
   transition: background-color 0.3s;
 
   &:hover {
-    background-color: #dde4f3;
+    background-color: var(--secondary);
   }
 `;
 
@@ -46,22 +51,23 @@ const Navbar = () => {
       <NavbarLeft>
         {user ? (
           <div>
-            <NavbarElement href={`/edit`}>{user.email}</NavbarElement>
+            <NavbarLink href={"/edit"}>icona</NavbarLink>
+            <NavbarElement>{"username"}</NavbarElement>
           </div>
         ) : (
           <div>
-            <NavbarElement href="/">logo</NavbarElement>
-            <NavbarElement href="/">iSort</NavbarElement>
+            <NavbarLink href="/">logo</NavbarLink>
+            <NavbarLink href="/">iSort</NavbarLink>
           </div>
         )}
       </NavbarLeft>
       <NavbarRight>
         {user ? (
-          <NavbarElement href="/logout">Esci</NavbarElement>
+          <NavbarLink href="/logout">Esci</NavbarLink>
         ) : (
           <div>
-            <NavbarElement href="/register">Registrati</NavbarElement>
-            <NavbarElement href="/login">Accedi</NavbarElement>
+            <NavbarLink href="/register">Registrati</NavbarLink>
+            <NavbarLink href="/login">Accedi</NavbarLink>
           </div>
         )}
       </NavbarRight>
