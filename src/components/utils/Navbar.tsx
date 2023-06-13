@@ -24,21 +24,18 @@ const NavbarRight = styled.div`
 const NavbarElement = styled(Paragraph)`
   display: inline-block;
   padding: 10px 15px;
-  font-size: 16px;
 
   color: var(--text);
 
   @media only screen and (max-width: 768px) {
     display: none;
+    padding: 10px 10px;
   }
 `;
 
-const NavbarLink = styled(Link)`
+const NavbarLink = styled(NavbarElement)`
   display: inline-block;
-  padding: 10px 15px;
-  font-size: 16px;
 
-  color: var(--text);
   transition: background-color 0.3s;
 
   &:hover {
@@ -50,6 +47,10 @@ const NavbarLink = styled(Link)`
       display: none;
     }
   }
+
+  &>* {
+    color: var(--text);
+  }
 `;
 
 const Navbar = () => {
@@ -60,25 +61,35 @@ const Navbar = () => {
       <NavbarLeft>
         {user ? (
           <div>
-            <NavbarLink href={"/edit"}>icona</NavbarLink>
+            <NavbarLink>
+              <Link href={"/edit"}>icona</Link>
+            </NavbarLink>
             <NavbarElement>{"username"}</NavbarElement>
           </div>
         ) : (
           <div>
-            <NavbarLink href="/">logo</NavbarLink>
-            <NavbarLink href="/" className="hideable">
-              iSort
+            <NavbarLink>
+              <Link href="/">logo</Link>
+            </NavbarLink>
+            <NavbarLink className="hideable">
+              <Link href="/">iSort</Link>
             </NavbarLink>
           </div>
         )}
       </NavbarLeft>
       <NavbarRight>
         {user ? (
-          <NavbarLink href="/logout">Esci</NavbarLink>
+          <NavbarLink>
+            <Link href="/logout">Esci</Link>
+          </NavbarLink>
         ) : (
           <div>
-            <NavbarLink href="/register">Registrati</NavbarLink>
-            <NavbarLink href="/login">Accedi</NavbarLink>
+            <NavbarLink>
+              <Link href="/register">Registrati</Link>
+            </NavbarLink>
+            <NavbarLink>
+              <Link href="/login">Accedi</Link>
+            </NavbarLink>
           </div>
         )}
       </NavbarRight>
