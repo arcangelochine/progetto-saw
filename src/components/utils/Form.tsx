@@ -1,15 +1,6 @@
 import { styled } from "styled-components";
-import { Center, Column, Row } from "./Containers";
-
-export const AuthBody = styled(Center)`
-  min-height: 100vh;
-  gap: 10px;
-`;
-
-export const AuthHeader = styled(Row)`
-  align-items: center;
-  font-weight: bold;
-`;
+import { Column } from "./Containers";
+import { PrimaryButton } from "./Buttons";
 
 export const AuthErrorContainer = styled.div`
   background-color: var(--error);
@@ -19,8 +10,10 @@ export const AuthErrorContainer = styled.div`
   text-align: center;
 `;
 
-export const Form = styled(Center)`
-  gap: 24px;
+export const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap:24px;
 `;
 
 const Label = styled.span`
@@ -50,14 +43,21 @@ const CustomInput = styled.input`
   font-size: 16px;
 `;
 
+export const InputButton = styled(PrimaryButton)`
+  margin-top: 10px;
+  width: 150px;
+  height: 40px;
+`;
+
 const InputWithLabelContainer = styled(Column)`
   box-sizing: border-box;
   gap: 4px;
 `;
 
 interface InputWithLabelProps {
-  label: string;
+  label?: string;
   type: string;
+  value: string;
   length?: number;
   isValid?: boolean;
   errorMessage?: string;
@@ -69,6 +69,7 @@ interface InputWithLabelProps {
 export const InputWithLabel = ({
   label,
   type,
+  value,
   length,
   isValid = true,
   errorMessage,
@@ -77,12 +78,14 @@ export const InputWithLabel = ({
 }: InputWithLabelProps) => {
   return (
     <InputWithLabelContainer>
-      <Label>{label}</Label>
+      {!!label && <Label>{label}</Label>}
       <CustomInput
         type={type}
         maxLength={length}
+        value={value}
         onChange={onChange}
         onFocus={onFocus}
+        required
       />
       {!isValid && <ErrorLabel>{errorMessage}</ErrorLabel>}
     </InputWithLabelContainer>

@@ -1,126 +1,85 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { WrongCredentialError, login } from "../../config/Auth";
-import {
-  AuthBody,
-  AuthErrorContainer,
-  AuthHeader,
-  Form,
-  InputWithLabel,
-  PrimaryButton,
-} from "../utils";
+import { AuthErrorContainer, Form, InputButton, InputWithLabel } from "../utils";
 
 const UNKNOWN_ERROR = "Errore del server";
 const LOGIN_ERROR = "Credenziali errate";
-
-interface LoginData<T extends string | boolean> {
-  username_or_email: T;
-  password: T;
-}
-
-interface AuthState {
-  loading: boolean;
-  error: boolean;
-  errorMessage: string;
-}
 
 const LoginForm = () => {
   const navigate = useNavigate();
 
   // Campi del form
-  const [formData, setFormData] = useState<LoginData<string>>({
-    username_or_email: "",
-    password: "",
-  });
+  const [usernameOrEmail, setUsernameOrEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   // Stato dell'autenticazione
-  const [authState, setAuthState] = useState<AuthState>({
-    loading: false,
-    error: false,
-    errorMessage: UNKNOWN_ERROR,
-  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(UNKNOWN_ERROR);
 
-  const submit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const submit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     // prevenzione spam
-    if (authState.loading) return;
+    if (loading) return;
 
-    setAuthState({ ...authState, loading: true });
-
-    const username_or_email = formData.username_or_email;
-    const password = formData.password;
+    setLoading(true);
 
     // Se i campi non sono stati compilati
-    if (username_or_email.length === 0 || password.length === 0) {
-      setAuthState({ loading: false, error: true, errorMessage: LOGIN_ERROR });
+    if (usernameOrEmail.length === 0 || password.length === 0) {
+      setLoading(false);
+      setError(true);
+      setErrorMessage(LOGIN_ERROR);
       return;
     }
 
     // Se i campi sono stati compilati
-    login(username_or_email, password)
+    login(usernameOrEmail, password)
       .then(() => {
         // Accesso completato
         navigate("/home");
       })
       .catch((err) => {
+        setError(true);
         // Problemi durante l'accesso
         switch (err.constructor) {
           case WrongCredentialError:
-            setAuthState({
-              ...authState,
-              error: true,
-              errorMessage: LOGIN_ERROR,
-            });
+            setErrorMessage(LOGIN_ERROR);
             break;
           default:
-            setAuthState({
-              ...authState,
-              error: true,
-              errorMessage: UNKNOWN_ERROR,
-            });
+            setErrorMessage(UNKNOWN_ERROR);
             break;
         }
       })
       .finally(() => {
-        setAuthState({ ...authState, loading: false });
+        setLoading(false);
       });
   };
 
   return (
-    <AuthBody>
-      <AuthHeader>
-        logo<h1>iSort</h1>
-      </AuthHeader>
-      <Form>
-        {authState.error && (
-          <AuthErrorContainer>{authState.errorMessage}</AuthErrorContainer>
-        )}
-        <InputWithLabel
-          label="Username/Email"
-          type="text"
-          onChange={(e) => {
-            setFormData({ ...formData, username_or_email: e.target.value });
-          }}
-        />
-        <InputWithLabel
-          label="Password"
-          type="password"
-          onChange={(e) => {
-            setFormData({ ...formData, password: e.target.value });
-          }}
-        />
-        <PrimaryButton
-          style={{ width: "100%", marginTop: "10px" }}
-          onClick={submit}
-        >
-          Accedi
-        </PrimaryButton>
-      </Form>
-      <span>
-        Non hai un account? <a href="/register">Registrati ora</a>
-      </span>
-    </AuthBody>
+    <Form onSubmit={submit}>
+      {error && <AuthErrorContainer>{errorMessage}</AuthErrorContainer>}
+      <InputWithLabel
+        label="Username/Email"
+        type="text"
+        value={usernameOrEmail}
+        onChange={(e) => {
+          setUsernameOrEmail(e.currentTarget.value);
+        }}
+      />
+      <InputWithLabel
+        label="Password"
+        type="password"
+        value={password}
+        onChange={(e) => {
+          setPassword(e.currentTarget.value);
+        }}
+      />
+      <InputButton type="submit" disabled={loading}>
+        Accedi
+      </InputButton>
+    </Form>
   );
 };
 
