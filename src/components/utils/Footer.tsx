@@ -11,7 +11,7 @@ const Footer = () => {
     <FooterBody>
       <Credits>
         <Paragraph>
-          Made by{" "}
+          Ideato e creato da{" "}
           <Link href="https://github.com/arcangelochine">Arcangelo Chiné</Link>
         </Paragraph>
       </Credits>
