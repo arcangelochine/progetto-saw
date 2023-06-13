@@ -30,10 +30,4 @@ export const Header = styled(Column)`
   padding: 10px;
 `;
 
-export const FooterBody = styled(Column)`
-  margin-top: auto;
-  padding: 10px;
 
-  background-color: var(--text);
-  color: var(--bg);
-`;

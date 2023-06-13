@@ -1,6 +1,14 @@
 import { styled } from "styled-components";
-import { FooterBody, Column } from "./Containers";
+import { Column } from "./Containers";
 import { Link, Paragraph } from "./Typography";
+
+const FooterBody = styled(Column)`
+  margin-top: auto;
+  padding: 10px;
+
+  background-color: var(--text);
+  color: var(--bg);
+`;
 
 const Credits = styled(Column)`
   align-items: flex-end;
