@@ -18,16 +18,18 @@ const NavbarRight = styled.div`
   justify-self: flex-end;
 `;
 
-const NavbarElement = styled.div`
+const NavbarCollapse = styled.div`
+  @media only screen and (max-width: 768px) {
+    display: none;
+  }
+`;
+
+const NavbarElement = styled(NavbarCollapse)`
   display: inline-block;
   padding: 10px 15px;
   font-size: 16px;
 
   color: var(--text);
-
-  @media only screen and (max-width: 768px) {
-    display: none;
-  }
 `;
 
 const NavbarLink = styled(Link)`
@@ -57,7 +59,9 @@ const Navbar = () => {
         ) : (
           <div>
             <NavbarLink href="/">logo</NavbarLink>
-            <NavbarLink href="/">iSort</NavbarLink>
+            <NavbarCollapse>
+              <NavbarLink href="/">iSort</NavbarLink>
+            </NavbarCollapse>
           </div>
         )}
       </NavbarLeft>
