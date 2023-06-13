@@ -2,7 +2,7 @@ import { useContext } from "react";
 import styled from "styled-components";
 import { AuthContext } from "../../core";
 import { Row } from "./Containers";
-import { Link } from "./Typography";
+import { Link, Paragraph } from "./Typography";
 
 const NavbarContainer = styled(Row)`
   position: fixed;
@@ -21,18 +21,16 @@ const NavbarRight = styled.div`
   justify-self: flex-end;
 `;
 
-const NavbarCollapse = styled.div`
-  @media only screen and (max-width: 768px) {
-    display: none;
-  }
-`;
-
-const NavbarElement = styled(NavbarCollapse)`
+const NavbarElement = styled(Paragraph)`
   display: inline-block;
   padding: 10px 15px;
   font-size: 16px;
 
   color: var(--text);
+
+  @media only screen and (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const NavbarLink = styled(Link)`
@@ -45,6 +43,12 @@ const NavbarLink = styled(Link)`
 
   &:hover {
     background-color: var(--secondary);
+  }
+
+  &.hideable {
+    @media only screen and (max-width: 768px) {
+      display: none;
+    }
   }
 `;
 
@@ -62,9 +66,9 @@ const Navbar = () => {
         ) : (
           <div>
             <NavbarLink href="/">logo</NavbarLink>
-            <NavbarCollapse>
-              <NavbarLink href="/">iSort</NavbarLink>
-            </NavbarCollapse>
+            <NavbarLink href="/" className="hideable">
+              iSort
+            </NavbarLink>
           </div>
         )}
       </NavbarLeft>
