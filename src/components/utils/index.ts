@@ -1,5 +1,6 @@
 import { PrimaryButton, SecondaryButton } from "./Buttons";
-import { Column, Row, Center } from "./Containers";
+import { Column, Row, Center, Body, Header, FooterBody } from "./Containers";
+import Footer from "./Footer";
 import {
   AuthBody,
   AuthHeader,
@@ -13,7 +14,8 @@ import Spinner from "./Spinner";
 import { Title, Paragraph, Accent, Link } from "./Typography";
 
 export { PrimaryButton, SecondaryButton };
-export { Column, Row, Center };
+export { Column, Row, Center, Body, Header, FooterBody };
+export { Footer };
 export { AuthBody, AuthHeader, AuthErrorContainer, Form, InputWithLabel };
 export { Navbar };
 export { PrivateRoute };

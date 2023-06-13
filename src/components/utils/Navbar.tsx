@@ -5,9 +5,12 @@ import { Row } from "./Containers";
 import { Link } from "./Typography";
 
 const NavbarContainer = styled(Row)`
+  position: fixed;
+  top: 0;
   width: 100%;
   justify-content: space-between;
   align-items: center;
+  overflow: hidden;
 `;
 
 const NavbarLeft = styled.div`
