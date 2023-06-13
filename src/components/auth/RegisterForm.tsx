@@ -274,7 +274,7 @@ const RegisterForm = () => {
         }}
       />
       <InputButton type="submit" disabled={loading}>
-        Accedi
+        Registrati
       </InputButton>
     </Form>
   );
