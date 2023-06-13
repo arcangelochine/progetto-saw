@@ -230,9 +230,6 @@ export const register = async (
         addDoc(users, user);
       });
     })
-    .catch(() => {
-      throw new ServerError();
-    });
 };
 
 /**
