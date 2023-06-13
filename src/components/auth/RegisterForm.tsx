@@ -1,12 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  AuthBody,
   AuthErrorContainer,
-  AuthHeader,
   Form,
+  InputButton,
   InputWithLabel,
-  PrimaryButton,
 } from "../utils";
 import {
   AlreadyInUseError,
@@ -31,122 +29,94 @@ const BAD_USERNAME_ERROR = "Non valido";
 const BAD_EMAIL_ERROR = "Non valida";
 const BAD_PASSWORD_ERROR = "Almeno 6 caratteri";
 
-interface RegisterData<T extends string | boolean> {
-  username: T;
-  email: T;
-  password: T;
-  confirmPassword: T;
-}
-
-interface AuthState {
-  loading: boolean;
-  error: boolean;
-  errorMessage: string;
-}
-
 const RegisterForm = () => {
   const navigate = useNavigate();
 
   // Campi del form
-  const [formData, setFormData] = useState<RegisterData<string>>({
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   // Convalida dei campi del form
-  const [formValidation, setFormValidation] = useState<RegisterData<boolean>>({
-    username: true,
-    email: true,
-    password: true,
-    confirmPassword: true,
-  });
+  const [usernameIsValid, setUsernameIsValid] = useState(true);
+  const [emailIsValid, setEmailIsValid] = useState(true);
+  const [passwordIsValid, setPasswordIsValid] = useState(true);
+  const [confirmPasswordIsValid, setConfirmPasswordIsValid] = useState(true);
 
   // Messaggi di errore dei campi del form
-  const [formErrorMessage, setFormErrorMessage] = useState<
-    RegisterData<string>
-  >({
-    username: REQUIRED_ERROR,
-    email: REQUIRED_ERROR,
-    password: REQUIRED_ERROR,
-    confirmPassword: REQUIRED_ERROR,
-  });
+  const [usernameErrorMessage, setUsernameErrorMessage] =
+    useState(REQUIRED_ERROR);
+  const [emailErrorMessage, setEmailErrorMessage] = useState(REQUIRED_ERROR);
+  const [passwordErrorMessage, setPasswordErrorMessage] =
+    useState(REQUIRED_ERROR);
+  const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] =
+    useState(REQUIRED_ERROR);
 
   // Stato dell'autenticazione
-  const [authState, setAuthState] = useState<AuthState>({
-    loading: false,
-    error: false,
-    errorMessage: UNKNOWN_ERROR,
-  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(UNKNOWN_ERROR);
 
-  const submit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const submit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     // anti-spam
-    if (authState.loading) return;
+    if (loading) return;
 
-    setAuthState({ ...authState, loading: true, error: false });
+    setLoading(true);
 
-    const username = formData.username;
-    const email = formData.email;
-    const password = formData.password;
-    const confirmPassword = formData.confirmPassword;
-
-    let errorMessage: RegisterData<string> = formErrorMessage;
-
-    let valid: RegisterData<boolean> = formValidation;
+    // variabili locali su cui fare il check
+    let checksum = [
+      usernameIsValid,
+      emailIsValid,
+      passwordIsValid,
+      confirmPasswordIsValid,
+    ];
 
     // Validazione (offline) username
     if (username.length === 0) {
-      errorMessage.username = REQUIRED_ERROR;
-      valid.username = false;
+      setUsernameErrorMessage(REQUIRED_ERROR);
+      setUsernameIsValid(false);
     }
 
     if (username.length > 0 && username.length < MIN_USERNAME_LENGTH) {
-      errorMessage.username = TOO_SHORT_ERROR;
-      valid.username = false;
+      setUsernameErrorMessage(TOO_SHORT_ERROR);
+      setUsernameIsValid(false);
     }
 
     if (username.length > MAX_USERNAME_LENGTH) {
-      errorMessage.username = TOO_LONG_ERROR;
-      valid.username = false;
+      setUsernameErrorMessage(TOO_LONG_ERROR);
+      setUsernameIsValid(false);
     }
 
     // Validazione (offline) email
     if (email.length === 0) {
-      errorMessage.email = REQUIRED_ERROR;
-      valid.email = false;
+      setEmailErrorMessage(REQUIRED_ERROR);
+      setEmailIsValid(false);
     }
 
     // Validazione (offline) password
     if (password.length === 0) {
-      errorMessage.password = REQUIRED_ERROR;
-      valid.password = false;
+      setPasswordErrorMessage(REQUIRED_ERROR);
+      setPasswordIsValid(false);
     }
 
     // Validazione (offline) confirmPassword
     if (confirmPassword.length === 0) {
-      errorMessage.confirmPassword = REQUIRED_ERROR;
-      valid.confirmPassword = false;
+      setConfirmPasswordErrorMessage(REQUIRED_ERROR);
+      setConfirmPasswordIsValid(false);
     }
 
     if (confirmPassword.length)
       if (password !== confirmPassword) {
-        errorMessage.confirmPassword = NOT_EQUAL_ERROR;
-        valid.confirmPassword = false;
+        setConfirmPasswordErrorMessage(NOT_EQUAL_ERROR);
+        setConfirmPasswordIsValid(false);
       }
 
     // Almeno un campo non è valido
-    if (
-      !valid.username ||
-      !valid.email ||
-      !valid.password ||
-      !valid.confirmPassword
-    ) {
-      setFormErrorMessage(errorMessage);
-      setFormValidation(valid);
-      setAuthState({ ...authState, loading: false });
+    if (!checksum.reduce((a, b) => a && b, true)) {
+      setLoading(false);
       return;
     }
 
@@ -167,89 +137,56 @@ const RegisterForm = () => {
                 // Errore username
                 switch (err.getType()) {
                   case "MISSING":
-                    setFormErrorMessage({
-                      ...formErrorMessage,
-                      username: REQUIRED_ERROR,
-                    });
+                    setUsernameErrorMessage(REQUIRED_ERROR);
                     break;
                   case "TOO_SHORT":
-                    setFormErrorMessage({
-                      ...formErrorMessage,
-                      username: TOO_SHORT_ERROR,
-                    });
+                    setUsernameErrorMessage(TOO_SHORT_ERROR);
                     break;
                   case "TOO_LONG":
-                    setFormErrorMessage({
-                      ...formErrorMessage,
-                      username: TOO_LONG_ERROR,
-                    });
+                    setUsernameErrorMessage(TOO_LONG_ERROR);
                     break;
                   default:
-                    setFormErrorMessage({
-                      ...formErrorMessage,
-                      username: BAD_USERNAME_ERROR,
-                    });
+                    setUsernameErrorMessage(BAD_USERNAME_ERROR);
                     break;
                 }
-                setFormValidation({ ...formValidation, username: false });
+                setUsernameIsValid(false);
                 break;
               case "EMAIL":
                 // Errore email
                 switch (err.getType()) {
                   case "MISSING":
-                    setFormErrorMessage({
-                      ...formErrorMessage,
-                      email: REQUIRED_ERROR,
-                    });
+                    setEmailErrorMessage(REQUIRED_ERROR);
                     break;
                   default:
-                    setFormErrorMessage({
-                      ...formErrorMessage,
-                      email: BAD_EMAIL_ERROR,
-                    });
+                    setEmailErrorMessage(BAD_EMAIL_ERROR);
                     break;
                 }
-                setFormValidation({ ...formValidation, email: false });
+                setEmailIsValid(false);
                 break;
               case "PASSWORD":
                 // Errore password
                 switch (err.getType()) {
                   case "MISSING":
-                    setFormErrorMessage({
-                      ...formErrorMessage,
-                      password: REQUIRED_ERROR,
-                    });
+                    setPasswordErrorMessage(REQUIRED_ERROR);
                     break;
                   default:
-                    setFormErrorMessage({
-                      ...formErrorMessage,
-                      password: BAD_PASSWORD_ERROR,
-                    });
+                    setPasswordErrorMessage(BAD_PASSWORD_ERROR);
                 }
-                setFormValidation({ ...formValidation, password: false });
+                setPasswordIsValid(false);
                 break;
               case "CONFIRM":
                 // Errore confirmPassword
                 switch (err.getType()) {
                   case "MISSING":
-                    setFormErrorMessage({
-                      ...formErrorMessage,
-                      confirmPassword: REQUIRED_ERROR,
-                    });
+                    setConfirmPasswordErrorMessage(REQUIRED_ERROR);
                     break;
                   case "NOT_EQUAL":
-                    setFormErrorMessage({
-                      ...formErrorMessage,
-                      confirmPassword: NOT_EQUAL_ERROR,
-                    });
+                    setConfirmPasswordErrorMessage(NOT_EQUAL_ERROR);
                     break;
                   default:
                     break;
                 }
-                setFormValidation({
-                  ...formValidation,
-                  confirmPassword: false,
-                });
+                setConfirmPasswordIsValid(false);
                 break;
             }
             break;
@@ -258,103 +195,88 @@ const RegisterForm = () => {
             assert(err instanceof AlreadyInUseError);
             switch (err.getWhich()) {
               case "USERNAME":
-                setFormErrorMessage({
-                  ...formErrorMessage,
-                  username: NOT_AVAILABLE_ERROR,
-                });
-                setFormValidation({ ...formValidation, username: false });
+                setUsernameErrorMessage(NOT_AVAILABLE_ERROR);
+                setUsernameIsValid(false);
                 break;
               case "EMAIL":
-                setFormErrorMessage({
-                  ...formErrorMessage,
-                  email: ALREADY_IN_USE_ERROR,
-                });
-                setFormValidation({ ...formValidation, email: false });
+                setEmailErrorMessage(ALREADY_IN_USE_ERROR);
+                setEmailIsValid(false);
                 break;
               default:
                 break;
             }
             break;
           default:
-            setAuthState({ ...authState, error: true });
+            setErrorMessage(UNKNOWN_ERROR);
+            setError(true);
             break;
         }
       })
       .finally(() => {
-        setAuthState({ ...authState, loading: false });
+        setLoading(false);
       });
   };
 
   return (
-    <AuthBody>
-      <AuthHeader>
-        logo
-        <h1>iSort</h1>
-      </AuthHeader>
-      <Form>
-        {authState.error && (
-          <AuthErrorContainer>{authState.errorMessage}</AuthErrorContainer>
-        )}
-        <InputWithLabel
-          label="Username"
-          type="text"
-          length={MAX_USERNAME_LENGTH}
-          isValid={formValidation.username}
-          errorMessage={formErrorMessage.username}
-          onChange={(e) => {
-            setFormData({ ...formData, username: e.target.value });
-          }}
-          onFocus={() => {
-            setFormValidation({ ...formValidation, username: true });
-          }}
-        />
-        <InputWithLabel
-          label="Email"
-          type="text"
-          isValid={formValidation.email}
-          errorMessage={formErrorMessage.email}
-          onChange={(e) => {
-            setFormData({ ...formData, email: e.target.value });
-          }}
-          onFocus={() => {
-            setFormValidation({ ...formValidation, email: true });
-          }}
-        />
-        <InputWithLabel
-          label="Password"
-          type="password"
-          isValid={formValidation.password}
-          errorMessage={formErrorMessage.password}
-          onChange={(e) => {
-            setFormData({ ...formData, password: e.target.value });
-          }}
-          onFocus={() => {
-            setFormValidation({ ...formValidation, password: true });
-          }}
-        />
-        <InputWithLabel
-          label="Confirm password"
-          type="password"
-          isValid={formValidation.confirmPassword}
-          errorMessage={formErrorMessage.confirmPassword}
-          onChange={(e) => {
-            setFormData({ ...formData, confirmPassword: e.target.value });
-          }}
-          onFocus={() => {
-            setFormValidation({ ...formValidation, confirmPassword: true });
-          }}
-        />
-        <PrimaryButton
-          style={{ width: "100%", marginTop: "10px" }}
-          onClick={submit}
-        >
-          Registrati
-        </PrimaryButton>
-      </Form>
-      <span>
-        Hai già un account? <a href="/login">Accedi</a>
-      </span>
-    </AuthBody>
+    <Form onSubmit={submit}>
+      {error && <AuthErrorContainer>{errorMessage}</AuthErrorContainer>}
+      <InputWithLabel
+        label="Username"
+        type="text"
+        value={username}
+        length={MAX_USERNAME_LENGTH}
+        isValid={usernameIsValid}
+        errorMessage={usernameErrorMessage}
+        onChange={(e) => {
+          setUsername(e.target.value);
+        }}
+        onFocus={() => {
+          setUsernameIsValid(true);
+        }}
+      />
+      <InputWithLabel
+        label="Email"
+        type="text"
+        value={email}
+        isValid={emailIsValid}
+        errorMessage={emailErrorMessage}
+        onChange={(e) => {
+          setEmail(e.target.value);
+        }}
+        onFocus={() => {
+          setEmailIsValid(true);
+        }}
+      />
+      <InputWithLabel
+        label="Password"
+        type="password"
+        value={password}
+        isValid={passwordIsValid}
+        errorMessage={passwordErrorMessage}
+        onChange={(e) => {
+          setPassword(e.target.value);
+        }}
+        onFocus={() => {
+          setPasswordIsValid(true);
+        }}
+      />
+      <InputWithLabel
+        label="Confirm password"
+        type="password"
+        value={confirmPassword}
+        isValid={confirmPasswordIsValid}
+        errorMessage={confirmPasswordErrorMessage}
+        onChange={(e) => {
+          setConfirmPassword(e.target.value);
+        }}
+        onFocus={() => {
+          setConfirmPasswordIsValid(true);
+        }}
+      />
+      <InputButton type="submit" disabled={loading}>
+        Accedi
+      </InputButton>
+    </Form>
   );
 };
 
