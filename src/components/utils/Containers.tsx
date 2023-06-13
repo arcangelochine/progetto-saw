@@ -19,7 +19,6 @@ export const Center = styled(Column)`
 
 export const Body = styled(Column)`
   min-height: 100vh;
-  padding: 0 20%;
 
   @media only screen and (max-width: 768px) {
     padding: 0;
