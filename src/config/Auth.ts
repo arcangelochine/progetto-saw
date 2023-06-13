@@ -263,18 +263,12 @@ export const login = async (username_or_email: string, password: string) => {
       .then(async () => {
         return signIn(lower, password);
       })
-      .catch(() => {
-        throw new ServerError();
-      });
 
   // Ho trovato la email nel database
   return setPersistence(auth, persistence)
     .then(async () => {
       return signIn(email, password);
     })
-    .catch(() => {
-      throw new ServerError();
-    });
 };
 
 /**
