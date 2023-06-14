@@ -51,7 +51,7 @@ function App() {
             }
           />
           <Route
-            path="/user/:id"
+            path="/edit"
             element={
               <PrivateRoute>
                 <User />
