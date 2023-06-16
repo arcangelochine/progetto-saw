@@ -33,5 +33,5 @@ export const Header = styled(Column)`
 `;
 
 export const IconContainer = styled(FontAwesomeIcon)`
-  display: inline-block;
+ box-sizing: border-box;
 `;

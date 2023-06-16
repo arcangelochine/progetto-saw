@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import styled from "styled-components";
 import { AuthContext } from "../../core";
-import { Center, IconContainer, Row } from "./Containers";
+import { IconContainer, Row } from "./Containers";
 import { Link, Paragraph } from "./Typography";
 
 import { faUser } from "@fortawesome/free-solid-svg-icons";
@@ -36,8 +36,13 @@ const NavbarElement = styled(Paragraph)`
   }
 `;
 
-const NavbarLink = styled(NavbarElement)`
+const NavbarLink = styled(Link)`
   display: inline-block;
+  padding: 10px 15px;
+
+  color: var(--text);
+
+  cursor: pointer;
 
   transition: background-color 0.3s;
 
@@ -50,10 +55,11 @@ const NavbarLink = styled(NavbarElement)`
       display: none;
     }
   }
+`;
 
-  & > * {
-    color: var(--text);
-  }
+const NavbarIcon = styled(NavbarLink)`
+  text-align: center;
+  vertical-align: auto;
 `;
 
 const Navbar = () => {
@@ -63,41 +69,29 @@ const Navbar = () => {
     <NavbarContainer>
       <NavbarLeft>
         {user ? (
-          <div>
-            <NavbarLink>
-              <Link href={"/edit"}>
-                <Center>
-                  <IconContainer icon={faUser} />
-                </Center>
-              </Link>
-            </NavbarLink>
+          <>
+            <NavbarIcon href={"/edit"}>
+              <IconContainer icon={faUser} />
+            </NavbarIcon>
             <NavbarElement>{user.displayName || "Benvenuto!"}</NavbarElement>
-          </div>
+          </>
         ) : (
-          <div>
-            <NavbarLink>
-              <Link href="/">logo</Link>
+          <>
+            <NavbarIcon href="/">logo</NavbarIcon>
+            <NavbarLink href="/" className="hideable">
+              iSort
             </NavbarLink>
-            <NavbarLink className="hideable">
-              <Link href="/">iSort</Link>
-            </NavbarLink>
-          </div>
+          </>
         )}
       </NavbarLeft>
       <NavbarRight>
         {user ? (
-          <NavbarLink>
-            <Link href="/logout">Esci</Link>
-          </NavbarLink>
+          <NavbarLink href="/logout">Esci</NavbarLink>
         ) : (
-          <div>
-            <NavbarLink>
-              <Link href="/register">Registrati</Link>
-            </NavbarLink>
-            <NavbarLink>
-              <Link href="/login">Accedi</Link>
-            </NavbarLink>
-          </div>
+          <>
+            <NavbarLink href="/register">Registrati</NavbarLink>
+            <NavbarLink href="/login">Accedi</NavbarLink>
+          </>
         )}
       </NavbarRight>
     </NavbarContainer>
