@@ -1,5 +1,12 @@
 import { Container, LoginForm, LogoAndTitle } from "../components/auth";
-import { Footer, Link, Title, Body, Paragraph } from "../components/utils";
+import {
+  Footer,
+  Link,
+  Title,
+  Body,
+  Paragraph,
+  Accent,
+} from "../components/utils";
 
 // Pagina per il login
 const Login = () => {
@@ -14,7 +21,10 @@ const Login = () => {
         </LogoAndTitle>
         <LoginForm />
         <Paragraph>
-          Non hai ancora un account? <Link href="/register">Registrati</Link>
+          Non hai ancora un account?{" "}
+          <Link href="/register">
+            <Accent>Registrati</Accent>
+          </Link>
         </Paragraph>
       </Container>
       <Footer />

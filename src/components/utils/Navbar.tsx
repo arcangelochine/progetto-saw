@@ -40,8 +40,6 @@ const NavbarLink = styled(Link)`
   display: inline-block;
   padding: 10px 15px;
 
-  color: var(--text);
-
   cursor: pointer;
 
   transition: background-color 0.3s;

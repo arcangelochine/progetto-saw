@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 import { Column } from "./Containers";
-import { Link, Paragraph } from "./Typography";
+import { Accent, Link, Paragraph } from "./Typography";
 
 const FooterBody = styled(Column)`
   margin-top: auto;
@@ -20,7 +20,9 @@ const Footer = () => {
       <Credits>
         <Paragraph>
           Ideato e creato da{" "}
-          <Link href="https://github.com/arcangelochine">Arcangelo Chiné</Link>
+          <Link href="https://github.com/arcangelochine">
+            <Accent>Arcangelo Chiné</Accent>
+          </Link>
         </Paragraph>
       </Credits>
     </FooterBody>

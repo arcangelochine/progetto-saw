@@ -1,5 +1,5 @@
 import { Container, LogoAndTitle, RegisterForm } from "../components/auth";
-import { Body, Footer, Link, Paragraph, Title } from "../components/utils";
+import { Accent, Body, Footer, Link, Paragraph, Title } from "../components/utils";
 
 // Pagina per registrarsi
 const Register = () => {
@@ -14,7 +14,7 @@ const Register = () => {
         </LogoAndTitle>
         <RegisterForm />
         <Paragraph>
-          Hai già un account? <Link href="/login">Accedi</Link>
+          Hai già un account? <Link href="/login"><Accent>Accedi</Accent></Link>
         </Paragraph>
       </Container>
       <Footer />

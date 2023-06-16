@@ -28,5 +28,5 @@ export const Link = styled.a`
   font-size: inherit;
   font-weight: inherit;
   text-decoration: none;
-  color: var(--accent);
+  color: var(--text);
 `;
