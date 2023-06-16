@@ -8,6 +8,7 @@ import {
   setPersistence,
   signInWithEmailAndPassword,
   signOut,
+  updateProfile,
 } from "firebase/auth";
 
 // Persistenza dell'autenticazione
@@ -219,17 +220,19 @@ export const register = async (
   if (!unique) throw new AlreadyInUseError("USERNAME");
 
   // Lo username è unico
-  return setPersistence(auth, persistence)
-    .then(async () => {
-      return singUp(email, password).then(() => {
-        // Registrazione avvenuta con successo
-        // Creo un nuovo utente
-        const user = new User(lower, username, lowerEmail, 10, new Date());
+  return setPersistence(auth, persistence).then(async () => {
+    return singUp(email, password).then((res) => {
+      // Registrazione avvenuta con successo
+      // Creo un nuovo utente
+      const user = new User(lower, username, lowerEmail, 10, new Date());
 
-        // Aggiungo l'utente al database (optimistic programming)
-        addDoc(users, user);
-      });
-    })
+      // Aggiungo l'utente al database (optimistic programming)
+      addDoc(users, user);
+
+      // Aggiorno le proprietà dell'utente
+      updateProfile(res.user, { displayName: username });
+    });
+  });
 };
 
 /**
@@ -256,16 +259,14 @@ export const login = async (username_or_email: string, password: string) => {
 
   // Se non trovo la email nel database, assumo che **lower** sia la mail
   if (email.length === 0)
-    return setPersistence(auth, persistence)
-      .then(async () => {
-        return signIn(lower, password);
-      })
+    return setPersistence(auth, persistence).then(async () => {
+      return signIn(lower, password);
+    });
 
   // Ho trovato la email nel database
-  return setPersistence(auth, persistence)
-    .then(async () => {
-      return signIn(email, password);
-    })
+  return setPersistence(auth, persistence).then(async () => {
+    return signIn(email, password);
+  });
 };
 
 /**
