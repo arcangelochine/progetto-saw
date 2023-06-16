@@ -1,3 +1,4 @@
+import AuthRoute from "./AuthRoute";
 import { PrimaryButton, SecondaryButton } from "./Buttons";
 import { Column, Row, Center, Body, Header, IconContainer } from "./Containers";
 import Footer from "./Footer";
@@ -7,6 +8,7 @@ import PrivateRoute from "./PrivateRoute";
 import Spinner from "./Spinner";
 import { Title, Paragraph, Accent, Link } from "./Typography";
 
+export { AuthRoute };
 export { PrimaryButton, SecondaryButton };
 export { Column, Row, Center, Body, Header, IconContainer };
 export { Footer };

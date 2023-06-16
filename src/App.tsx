@@ -13,7 +13,7 @@ import {
   Register,
   User,
 } from "./pages";
-import { PrivateRoute } from "./components/utils";
+import { AuthRoute, PrivateRoute } from "./components/utils";
 import { AuthProvider } from "./core";
 
 function App() {
@@ -23,8 +23,23 @@ function App() {
         <Routes>
           <Route index element={<Landing />} />
           <Route path="/" element={<Landing />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
+          
+          <Route
+            path="/register"
+            element={
+              <AuthRoute>
+                <Register />
+              </AuthRoute>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <AuthRoute>
+                <Login />
+              </AuthRoute>
+            }
+          />
 
           <Route
             path="/admin"
@@ -74,7 +89,6 @@ function App() {
               </PrivateRoute>
             }
           />
-
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
