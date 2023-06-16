@@ -6,7 +6,14 @@ import { AuthErrorContainer, Form, InputButton, InputWithLabel } from "./Form";
 import Navbar from "./Navbar";
 import PrivateRoute from "./PrivateRoute";
 import Spinner from "./Spinner";
-import { Title, Paragraph, Accent, Link } from "./Typography";
+import {
+  Title,
+  Subtitle,
+  Paragraph,
+  Link,
+  Accent,
+  Gradient,
+} from "./Typography";
 
 export { AuthRoute };
 export { PrimaryButton, SecondaryButton };
@@ -16,4 +23,4 @@ export { AuthErrorContainer, Form, InputButton, InputWithLabel };
 export { Navbar };
 export { PrivateRoute };
 export { Spinner };
-export { Title, Paragraph, Accent, Link };
+export { Title, Subtitle, Paragraph, Link, Accent, Gradient };
