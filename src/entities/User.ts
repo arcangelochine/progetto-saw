@@ -5,10 +5,10 @@ import {
 } from "firebase/firestore";
 
 export class User {
-  private username: string; // lower case (case-insensitive)
+  private username: string; // always lower case
   private displayName: string; // case sensitive
   private email: string;
-  private permission: number;
+  private permission: number; // future feature?
   private registeredAt: Date;
 
   constructor(
