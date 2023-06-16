@@ -1,8 +1,10 @@
 import { useContext } from "react";
 import styled from "styled-components";
 import { AuthContext } from "../../core";
-import { Row } from "./Containers";
+import { Center, IconContainer, Row } from "./Containers";
 import { Link, Paragraph } from "./Typography";
+
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 
 const NavbarContainer = styled(Row)`
   position: fixed;
@@ -11,6 +13,7 @@ const NavbarContainer = styled(Row)`
   justify-content: space-between;
   align-items: center;
   overflow: hidden;
+  background-color: var(--bg);
 `;
 
 const NavbarLeft = styled.div`
@@ -48,7 +51,7 @@ const NavbarLink = styled(NavbarElement)`
     }
   }
 
-  &>* {
+  & > * {
     color: var(--text);
   }
 `;
@@ -62,9 +65,13 @@ const Navbar = () => {
         {user ? (
           <div>
             <NavbarLink>
-              <Link href={"/edit"}>icona</Link>
+              <Link href={"/edit"}>
+                <Center>
+                  <IconContainer icon={faUser} />
+                </Center>
+              </Link>
             </NavbarLink>
-            <NavbarElement>{"username"}</NavbarElement>
+            <NavbarElement>{user.displayName || "Benvenuto!"}</NavbarElement>
           </div>
         ) : (
           <div>

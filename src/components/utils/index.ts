@@ -1,5 +1,5 @@
 import { PrimaryButton, SecondaryButton } from "./Buttons";
-import { Column, Row, Center, Body, Header } from "./Containers";
+import { Column, Row, Center, Body, Header, IconContainer } from "./Containers";
 import Footer from "./Footer";
 import { AuthErrorContainer, Form, InputButton, InputWithLabel } from "./Form";
 import Navbar from "./Navbar";
@@ -8,7 +8,7 @@ import Spinner from "./Spinner";
 import { Title, Paragraph, Accent, Link } from "./Typography";
 
 export { PrimaryButton, SecondaryButton };
-export { Column, Row, Center, Body, Header };
+export { Column, Row, Center, Body, Header, IconContainer };
 export { Footer };
 export { AuthErrorContainer, Form, InputButton, InputWithLabel };
 export { Navbar };
