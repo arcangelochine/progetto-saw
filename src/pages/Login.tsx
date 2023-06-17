@@ -1,24 +1,19 @@
-import { Container, LoginForm, LogoAndTitle } from "../components/auth";
+import { LoginForm } from "../components/auth";
 import {
-  Footer,
   Link,
-  Title,
   Body,
   Paragraph,
   Accent,
+  Content,
+  Navbar,
 } from "../components/utils";
 
 // Pagina per il login
 const Login = () => {
   return (
     <Body>
-      <Container>
-        <LogoAndTitle>
-          logo
-          <Title>
-            <Link href="/">iSort</Link>
-          </Title>
-        </LogoAndTitle>
+      <Navbar page="AUTH" />
+      <Content>
         <LoginForm />
         <Paragraph>
           Non hai ancora un account?{" "}
@@ -26,8 +21,7 @@ const Login = () => {
             <Accent>Registrati</Accent>
           </Link>
         </Paragraph>
-      </Container>
-      <Footer />
+      </Content>
     </Body>
   );
 };

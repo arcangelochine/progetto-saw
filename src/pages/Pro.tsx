@@ -1,15 +1,15 @@
 import { Body, Header, Navbar, Title } from "../components/utils";
 
 // Pagina per gli ospiti
-const Landing = () => {
+const Pro = () => {
   return (
     <Body>
-      <Navbar page="HOME" />
+      <Navbar page="PRO" />
       <Header>
-        <Title>Landing</Title>
+        <Title>Go pro</Title>
       </Header>
     </Body>
   );
 };
 
-export default Landing;
+export default Pro;

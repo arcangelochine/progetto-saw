@@ -1,22 +1,28 @@
-import { Container, LogoAndTitle, RegisterForm } from "../components/auth";
-import { Accent, Body, Footer, Link, Paragraph, Title } from "../components/utils";
+import { RegisterForm } from "../components/auth";
+import {
+  Accent,
+  Body,
+  Content,
+  Footer,
+  Link,
+  Navbar,
+  Paragraph,
+} from "../components/utils";
 
 // Pagina per registrarsi
 const Register = () => {
   return (
     <Body>
-      <Container>
-        <LogoAndTitle>
-          logo
-          <Title>
-            <Link href="/">iSort</Link>
-          </Title>
-        </LogoAndTitle>
+      <Navbar page="AUTH" />
+      <Content>
         <RegisterForm />
         <Paragraph>
-          Hai già un account? <Link href="/login"><Accent>Accedi</Accent></Link>
+          Hai già un account?{" "}
+          <Link href="/login">
+            <Accent>Accedi</Accent>
+          </Link>
         </Paragraph>
-      </Container>
+      </Content>
       <Footer />
     </Body>
   );

@@ -1,6 +1,15 @@
-// Pagina per gestire un inventario
+import { Body, Header, Navbar, Title } from "../components/utils";
+
+// Pagina con lista degli inventari
 const Inventory = () => {
-    return (<h1>Inventory</h1>);
-}
+  return (
+    <Body>
+      <Navbar page="INVENTORY" />
+      <Header>
+        <Title>Seleziona un inventario</Title>
+      </Header>
+    </Body>
+  );
+};
 
 export default Inventory;

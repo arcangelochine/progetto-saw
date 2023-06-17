@@ -1,6 +1,16 @@
-// Pagina per vedere le statistiche di un inventario
+import { Body, Content, Header, Navbar, Title } from "../components/utils";
+
+// Pagina con lista degli inventari
 const Analytics = () => {
-    return (<h1>Analytics</h1>);
-}
+  return (
+    <Body>
+      <Navbar page="ANALYTICS" />
+      <Header>
+        <Title>Seleziona un inventario</Title>
+      </Header>
+      <Content></Content>
+    </Body>
+  );
+};
 
 export default Analytics;

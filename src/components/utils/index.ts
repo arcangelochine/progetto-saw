@@ -1,6 +1,14 @@
 import AuthRoute from "./AuthRoute";
 import { PrimaryButton, SecondaryButton } from "./Buttons";
-import { Column, Row, Center, Body, Header, IconContainer } from "./Containers";
+import {
+  Column,
+  Row,
+  Center,
+  Body,
+  Header,
+  Content,
+  IconContainer,
+} from "./Containers";
 import Footer from "./Footer";
 import { AuthErrorContainer, Form, InputButton, InputWithLabel } from "./Form";
 import Navbar from "./Navbar";
@@ -17,7 +25,7 @@ import {
 
 export { AuthRoute };
 export { PrimaryButton, SecondaryButton };
-export { Column, Row, Center, Body, Header, IconContainer };
+export { Column, Row, Center, Body, Header, Content, IconContainer };
 export { Footer };
 export { AuthErrorContainer, Form, InputButton, InputWithLabel };
 export { Navbar };

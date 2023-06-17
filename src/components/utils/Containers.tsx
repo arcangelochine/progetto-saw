@@ -28,10 +28,15 @@ export const Body = styled(Column)`
 `;
 
 export const Header = styled(Column)`
-  margin-top: 50px;
+  padding: 10px;
+
+  border-bottom: 4px dashed var(--secondary);
+`;
+
+export const Content = styled(Column)`
   padding: 10px;
 `;
 
 export const IconContainer = styled(FontAwesomeIcon)`
- box-sizing: border-box;
+  box-sizing: border-box;
 `;

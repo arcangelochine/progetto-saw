@@ -1,15 +1,16 @@
 import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import {
-  Admin,
   Analytics,
+  AnalyticsTable,
   Home,
   Inventory,
+  InventoryTable,
   Landing,
   Login,
   Logout,
-  NotFound,
   //Offline,
+  Pro,
   Register,
   User,
 } from "./pages";
@@ -23,7 +24,7 @@ function App() {
         <Routes>
           <Route index element={<Landing />} />
           <Route path="/" element={<Landing />} />
-          
+
           <Route
             path="/register"
             element={
@@ -42,14 +43,6 @@ function App() {
           />
 
           <Route
-            path="/admin"
-            element={
-              <PrivateRoute>
-                <Admin />
-              </PrivateRoute>
-            }
-          />
-          <Route
             path="/home"
             element={
               <PrivateRoute>
@@ -58,10 +51,42 @@ function App() {
             }
           />
           <Route
-            path="/logout"
+            path="/inventory/:id"
             element={
-              <PrivateRoute redirect="/">
-                <Logout />
+              <PrivateRoute>
+                <InventoryTable />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/inventory"
+            element={
+              <PrivateRoute>
+                <Inventory />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/analytics/:id"
+            element={
+              <PrivateRoute>
+                <AnalyticsTable />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/analytics"
+            element={
+              <PrivateRoute>
+                <Analytics />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/pro"
+            element={
+              <PrivateRoute>
+                <Pro />
               </PrivateRoute>
             }
           />
@@ -74,22 +99,13 @@ function App() {
             }
           />
           <Route
-            path="/inventory/:id"
+            path="/logout"
             element={
-              <PrivateRoute>
-                <Inventory />
+              <PrivateRoute redirect="/">
+                <Logout />
               </PrivateRoute>
             }
           />
-          <Route
-            path="/inventory/:id/analytics"
-            element={
-              <PrivateRoute>
-                <Analytics />
-              </PrivateRoute>
-            }
-          />
-          <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
     </AuthProvider>
