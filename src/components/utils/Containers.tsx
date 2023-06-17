@@ -29,12 +29,16 @@ export const Body = styled(Column)`
 
 export const Header = styled(Column)`
   padding: 10px;
+  padding-bottom: 30px;
 
   border-bottom: 4px dashed var(--secondary);
 `;
 
 export const Content = styled(Column)`
   padding: 10px;
+  gap: 30px;
+
+  padding-bottom: 100px;
 `;
 
 export const IconContainer = styled(FontAwesomeIcon)`
