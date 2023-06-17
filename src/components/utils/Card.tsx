@@ -1,0 +1,47 @@
+import { styled } from "styled-components";
+
+export const Card = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  width: 100%;
+  border-radius: 10px;
+
+  color: var(--bg);
+  background-color: var(--primary);
+  background: -webkit-linear-gradient(90deg, var(--primary), var(--accent));;
+`;
+
+export const ClickableCard = styled(Card)`
+  box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.6);
+`;
+
+export const CardHeader = styled.div`
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--bg);
+`;
+
+export const CardContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0;
+  gap: 10px;
+  width: 100%;
+
+  color: inherit;
+`;
+
+export const CardFooter = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 0 10px;
+  width: 100%;
+
+  color: inherit;
+`;
+
+export const CardProperty = styled(CardContent)`
+    padding: 0;
+    gap: 2px;
+`;
