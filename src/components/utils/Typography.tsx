@@ -53,3 +53,9 @@ export const Bold = styled.span`
   font-size: inherit;
   font-weight: bold;
 `;
+
+export const Underline = styled.span`
+  font-size: inherit;
+  font-weight: inherit;
+  text-decoration: underline;
+`;

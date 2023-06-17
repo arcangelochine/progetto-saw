@@ -31,6 +31,7 @@ import {
   Accent,
   Gradient,
   Bold,
+  Underline,
 } from "./Typography";
 
 export { AuthRoute };
@@ -50,4 +51,4 @@ export { AuthErrorContainer, Form, InputButton, InputWithLabel };
 export { Navbar };
 export { PrivateRoute };
 export { Spinner };
-export { Title, Subtitle, Paragraph, Link, Accent, Gradient, Bold };
+export { Title, Subtitle, Paragraph, Link, Accent, Gradient, Bold, Underline };
