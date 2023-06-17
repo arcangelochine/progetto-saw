@@ -9,7 +9,7 @@ export const Card = styled.div`
 
   color: var(--bg);
   background-color: var(--primary);
-  background: -webkit-linear-gradient(90deg, var(--primary), var(--accent));;
+  background: -webkit-linear-gradient(90deg, var(--primary), var(--accent));
 `;
 
 export const ClickableCard = styled(Card)`
@@ -42,6 +42,15 @@ export const CardFooter = styled.div`
 `;
 
 export const CardProperty = styled(CardContent)`
-    padding: 0;
-    gap: 2px;
+  padding: 0;
+  gap: 2px;
+`;
+
+export const CardErrorLabel = styled.span`
+  padding: 4px 6px;
+  border-radius: 10px;
+  background-color: var(--error);
+  font-size: inherit;
+  font-weight: inherit;
+  text-transform: uppercase;
 `;
