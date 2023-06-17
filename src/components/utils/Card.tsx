@@ -7,13 +7,16 @@ export const Card = styled.div`
   width: 100%;
   border-radius: 10px;
 
-  color: var(--bg);
-  background-color: var(--primary);
-  background: -webkit-linear-gradient(90deg, var(--primary), var(--accent));
+  color: var(--text);
+  background-color: var(--secondary);
 `;
 
 export const ClickableCard = styled(Card)`
   box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.6);
+
+  color: var(--bg);
+  background-color: var(--primary);
+  background: -webkit-linear-gradient(90deg, var(--primary), var(--accent));
 `;
 
 export const CardHeader = styled.div`
@@ -53,4 +56,10 @@ export const CardErrorLabel = styled.span`
   font-size: inherit;
   font-weight: inherit;
   text-transform: uppercase;
+`;
+
+export const CardCenterContent = styled(CardContent)`
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 `;

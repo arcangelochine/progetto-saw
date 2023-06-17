@@ -8,6 +8,7 @@ import {
   CardFooter,
   CardProperty,
   CardErrorLabel,
+  CardCenterContent,
 } from "./Card";
 import {
   Column,
@@ -44,6 +45,7 @@ export {
   CardFooter,
   CardProperty,
   CardErrorLabel,
+  CardCenterContent,
 };
 export { Column, Row, Center, Body, Header, Content, IconContainer };
 export { Footer };
