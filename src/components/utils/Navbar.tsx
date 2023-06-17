@@ -1,97 +1,166 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { AuthContext } from "../../core";
 import { IconContainer, Row } from "./Containers";
-import { Link, Paragraph } from "./Typography";
+import { Link } from "./Typography";
 
-import { faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faHouse,
+  faDatabase,
+  faArrowUp,
+  faArrowDown,
+  faChartLine,
+  faQuestionCircle,
+  faUser,
+  faRightToBracket,
+} from "@fortawesome/free-solid-svg-icons";
 
 const NavbarContainer = styled(Row)`
   position: fixed;
-  top: 0;
+  bottom: 0;
   width: 100%;
-  justify-content: space-between;
+
+  justify-content: space-evenly;
   align-items: center;
   overflow: hidden;
-  background-color: var(--bg);
+
+  background-color: var(--text);
+  color: var(--bg);
 `;
 
-const NavbarLeft = styled.div`
-  justify-self: flex-start;
-`;
-
-const NavbarRight = styled.div`
-  justify-self: flex-end;
-`;
-
-const NavbarElement = styled(Paragraph)`
+const NavbarItem = styled(Link)`
+  width: 100%;
   display: inline-block;
-  padding: 10px 15px;
-
-  color: var(--text);
-
-  @media only screen and (max-width: 768px) {
-    display: none;
-    padding: 10px 10px;
-  }
-`;
-
-const NavbarLink = styled(Link)`
-  display: inline-block;
-  padding: 10px 15px;
-
-  cursor: pointer;
-
-  transition: background-color 0.3s;
-
-  &:hover {
-    background-color: var(--secondary);
-  }
-
-  &.hideable {
-    @media only screen and (max-width: 768px) {
-      display: none;
-    }
-  }
-`;
-
-const NavbarIcon = styled(NavbarLink)`
   text-align: center;
   vertical-align: auto;
+  padding: 10px;
+
+  background-color: var(--text);
+  color: var(--bg);
+
+  &.active {
+    background-color: var(--bg);
+    color: var(--text);
+  }
 `;
 
-const Navbar = () => {
+const InventoryScrollButton = styled.button`
+  width: 100%;
+  display: inline-block;
+  text-align: center;
+  vertical-align: auto;
+  padding: 10px;
+  cursor: pointer;
+
+  border: 3px solid var(--bg);
+
+  background-color: var(--bg);
+  color: var(--text);
+`;
+
+const ScrollButton = () => {
+  const [isScrolling, setIsScrolling] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      setIsScrolling(scrollTop > 0);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  const scrollTo = (position: number) => {
+    window.scrollTo({
+      top: position,
+      behavior: "smooth",
+    });
+  };
+
+  const handleButtonClick = () => {
+    if (isScrolling) {
+      scrollTo(0); // Scroll to top
+    } else {
+      scrollTo(document.documentElement.scrollHeight); // Scroll to bottom
+    }
+  };
+
+  return (
+    <>
+      {isScrolling ? (
+        <InventoryScrollButton onClick={handleButtonClick}>
+          <IconContainer icon={faArrowUp} />
+        </InventoryScrollButton>
+      ) : (
+        <InventoryScrollButton onClick={handleButtonClick}>
+          <IconContainer icon={faArrowDown} />
+        </InventoryScrollButton>
+      )}
+    </>
+  );
+};
+
+type pageType =
+  | "HOME"
+  | "INVENTORY"
+  | "INVENTORY_TABLE"
+  | "ANALYTICS"
+  | "PRO"
+  | "EDIT"
+  | "AUTH";
+
+interface NavbarProps {
+  page: pageType;
+}
+
+const Navbar = ({ page }: NavbarProps) => {
   const user = useContext(AuthContext);
+
+  if (user)
+    return (
+      <NavbarContainer>
+        <NavbarItem href="/home" className={`${page === "HOME" && "active"}`}>
+          <IconContainer icon={faHouse} />
+        </NavbarItem>
+
+        {page === "INVENTORY_TABLE" ? (
+          <ScrollButton />
+        ) : (
+          <NavbarItem
+            href="/inventory"
+            className={`${page === "INVENTORY" && "active"}`}
+          >
+            <IconContainer icon={faDatabase} />
+          </NavbarItem>
+        )}
+
+        <NavbarItem
+          href="/analytics"
+          className={`${page === "ANALYTICS" && "active"}`}
+        >
+          <IconContainer icon={faChartLine} />
+        </NavbarItem>
+        <NavbarItem href="/pro" className={`${page === "PRO" && "active"}`}>
+          <IconContainer icon={faQuestionCircle} />
+        </NavbarItem>
+        <NavbarItem href="/edit" className={`${page === "EDIT" && "active"}`}>
+          <IconContainer icon={faUser} />
+        </NavbarItem>
+      </NavbarContainer>
+    );
 
   return (
     <NavbarContainer>
-      <NavbarLeft>
-        {user ? (
-          <>
-            <NavbarIcon href={"/edit"}>
-              <IconContainer icon={faUser} />
-            </NavbarIcon>
-            <NavbarElement>{user.displayName || "Benvenuto!"}</NavbarElement>
-          </>
-        ) : (
-          <>
-            <NavbarIcon href="/">logo</NavbarIcon>
-            <NavbarLink href="/" className="hideable">
-              iSort
-            </NavbarLink>
-          </>
-        )}
-      </NavbarLeft>
-      <NavbarRight>
-        {user ? (
-          <NavbarLink href="/logout">Esci</NavbarLink>
-        ) : (
-          <>
-            <NavbarLink href="/register">Registrati</NavbarLink>
-            <NavbarLink href="/login">Accedi</NavbarLink>
-          </>
-        )}
-      </NavbarRight>
+      <NavbarItem href="/"></NavbarItem>
+      <NavbarItem href="/" style={{ width: "200%" }}>
+        iSort
+      </NavbarItem>
+      <NavbarItem href="/login" className={`${page === "AUTH" && "active"}`}>
+        <IconContainer icon={faRightToBracket} />
+      </NavbarItem>
     </NavbarContainer>
   );
 };
