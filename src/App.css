@@ -25,6 +25,10 @@ a {
   color: var(--accent)
 }
 
+html {
+  background-color: var(--bg);
+}
+
 body {
   background-color: var(--bg);
   color: var(--text);
