@@ -48,3 +48,8 @@ export const Gradient = styled.span`
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 `;
+
+export const Bold = styled.span`
+  font-size: inherit;
+  font-weight: bold;
+`;

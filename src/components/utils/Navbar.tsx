@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { AuthContext } from "../../core";
 import { IconContainer, Row } from "./Containers";
-import { Link } from "./Typography";
+import { Bold, Link } from "./Typography";
 
 import {
   faHouse,
@@ -156,7 +156,7 @@ const Navbar = ({ page }: NavbarProps) => {
     <NavbarContainer>
       <NavbarItem href="/"></NavbarItem>
       <NavbarItem href="/" style={{ width: "200%" }}>
-        iSort
+        <Bold>iSort</Bold>
       </NavbarItem>
       <NavbarItem href="/login" className={`${page === "AUTH" && "active"}`}>
         <IconContainer icon={faRightToBracket} />
