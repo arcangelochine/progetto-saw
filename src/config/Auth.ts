@@ -224,7 +224,7 @@ export const register = async (
     return singUp(email, password).then((res) => {
       // Registrazione avvenuta con successo
       // Creo un nuovo utente
-      const user = new User(lower, username, lowerEmail, 10, new Date());
+      const user = new User(lower, username, lowerEmail, false, new Date());
 
       // Aggiungo l'utente al database (optimistic programming)
       addDoc(users, user);

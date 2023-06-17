@@ -8,20 +8,20 @@ export class User {
   private username: string; // always lower case
   private displayName: string; // case sensitive
   private email: string;
-  private permission: number; // future feature?
+  private premium: boolean;
   private registeredAt: Date;
 
   constructor(
     username: string,
     displayName: string,
     email: string,
-    permission: number,
+    premium: boolean,
     registeredAt: Date
   ) {
     this.username = username;
     this.displayName = displayName;
     this.email = email;
-    this.permission = permission;
+    this.premium = premium;
     this.registeredAt = registeredAt;
   }
 
@@ -37,16 +37,12 @@ export class User {
     return this.email;
   }
 
-  getPerm() {
-    return this.permission;
-  }
-
   getRegisterDate() {
     return this.registeredAt;
   }
 
-  isAdmin() {
-    return this.permission === 100;
+  isPremium() {
+    return this.premium;
   }
 }
 
@@ -56,7 +52,7 @@ export const userConverter = {
       username: user.getUsername(),
       display_name: user.getDisplayName(),
       email: user.getEmail(),
-      permission: user.getPerm(),
+      premium: user.isPremium(),
       registered_at: Timestamp.fromDate(user.getRegisterDate()),
     };
   },
@@ -69,7 +65,7 @@ export const userConverter = {
       data.username,
       data.display_name,
       data.email,
-      data.permission,
+      data.premium,
       new Date(data.registered_at)
     );
   },
