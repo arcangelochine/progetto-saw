@@ -25,25 +25,15 @@ export class User {
     this.registeredAt = registeredAt;
   }
 
-  getUsername() {
-    return this.username;
-  }
+  getUsername = () => this.username;
 
-  getDisplayName() {
-    return this.displayName;
-  }
+  getDisplayName = () => this.displayName;
 
-  getEmail() {
-    return this.email;
-  }
+  getEmail = () => this.email;
 
-  getRegisterDate() {
-    return this.registeredAt;
-  }
+  getRegisterDate = () => this.registeredAt;
 
-  isPremium() {
-    return this.premium;
-  }
+  isPremium = () => this.premium;
 }
 
 export const userConverter = {
