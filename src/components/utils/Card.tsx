@@ -17,6 +17,18 @@ export const ClickableCard = styled(Card)`
   color: var(--bg);
   background-color: var(--primary);
   background: -webkit-linear-gradient(90deg, var(--primary), var(--accent));
+
+  transition: transform 0.3s, box-shadow 0.3s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.6);
+  }
+
+  &:active {
+    transform: translateY(2px);
+    box-shadow: none;
+  }
 `;
 
 export const CardHeader = styled.div`
