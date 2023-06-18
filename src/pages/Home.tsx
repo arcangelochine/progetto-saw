@@ -9,6 +9,7 @@ import {
   Title,
 } from "../components/utils";
 import { AuthContext } from "../core";
+import { InventoryList } from "../components/inventory";
 
 // Pagina personale (dashboard)
 const Home = () => {
@@ -24,6 +25,7 @@ const Home = () => {
       </Header>
       <Content>
         <Subtitle>I tuoi inventari</Subtitle>
+        <InventoryList editable expandable />
       </Content>
     </Body>
   );
