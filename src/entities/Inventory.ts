@@ -1,6 +1,6 @@
 import { QueryDocumentSnapshot, SnapshotOptions } from "firebase/firestore";
 
-class Item {
+export class Item {
   private _name: string;
   private _amount: number;
   private _value: number;
@@ -25,7 +25,8 @@ class Item {
 }
 
 export class Inventory {
-  private _uid: string;
+  // Lo uid è null in fase di creazione dell'inventario
+  private _uid: string | null;
   private _name: string;
   private _owner: string;
   private _items: Array<Item>;
@@ -33,7 +34,7 @@ export class Inventory {
   private _value: number;
 
   constructor(
-    uid: string,
+    uid: string | null,
     name: string,
     owner: string,
     items: Array<Item>,
