@@ -26,6 +26,8 @@ const NavbarContainer = styled(Row)`
 
   background-color: var(--text);
   color: var(--bg);
+
+  z-index: 100;
 `;
 
 const NavbarItem = styled(Link)`
