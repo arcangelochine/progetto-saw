@@ -59,3 +59,12 @@ export const Underline = styled.span`
   font-weight: inherit;
   text-decoration: underline;
 `;
+
+export const Small = styled.span`
+  font-size: 14px;
+  font-weight: inherit;
+
+  @media only screen and (max-width: 768px) {
+    font-size: 10px;
+  }
+`;
