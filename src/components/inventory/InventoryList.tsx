@@ -143,7 +143,7 @@ const InventoryList = ({
   expandable = false,
 }: InventoryListProps) => {
   const user = useContext(AuthContext);
-  const [inventories, setInventories] = useState<Inventory[]>(
+  const [inventories, setInventories] = useState<Array<Inventory>>(
     new Array<Inventory>()
   );
   const [premium, setPremium] = useState(false);
