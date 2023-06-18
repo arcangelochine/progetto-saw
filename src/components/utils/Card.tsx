@@ -18,6 +18,8 @@ export const ClickableCard = styled(Card)`
   background-color: var(--primary);
   background: -webkit-linear-gradient(90deg, var(--primary), var(--accent));
 
+  cursor: pointer;
+
   transition: transform 0.3s, box-shadow 0.3s;
 
   &:hover {
