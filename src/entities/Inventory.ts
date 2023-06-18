@@ -1,62 +1,91 @@
 import { QueryDocumentSnapshot, SnapshotOptions } from "firebase/firestore";
 
 class Item {
-  private name: string;
-  private amount: number;
-  private value: number;
+  private _name: string;
+  private _amount: number;
+  private _value: number;
 
   constructor(name: string, amount: number, value: number) {
-    this.name = name;
-    this.amount = amount;
-    this.value = value;
+    this._name = name;
+    this._amount = amount;
+    this._value = value;
   }
 
-  getName = () => this.name;
+  public get name() {
+    return this._name;
+  }
 
-  getAmount = () => this.amount;
+  public get amount() {
+    return this._amount;
+  }
 
-  getValue = () => this.value;
+  public get value() {
+    return this._value;
+  }
 }
 
 export class Inventory {
-  private name: string;
-  private owner: string;
-  private items: Item[];
-  private capacity: number;
-  private value: number;
+  private _uid: string;
+  private _name: string;
+  private _owner: string;
+  private _items: Array<Item>;
+  private _capacity: number;
+  private _value: number;
 
-  constructor(name: string, owner: string, items: Item[], capacity: number) {
-    this.name = name;
-    this.owner = owner;
-    this.items = items;
-    this.capacity = capacity;
-    this.value = this.computeValue();
+  constructor(
+    uid: string,
+    name: string,
+    owner: string,
+    items: Array<Item>,
+    capacity: number
+  ) {
+    this._uid = uid;
+    this._name = name;
+    this._owner = owner;
+    this._items = items;
+    this._capacity = capacity;
+    this._value = this.computeValue();
   }
 
-  getName = () => this.name;
+  public get uid() {
+    return this._uid;
+  }
 
-  getOwner = () => this.owner;
+  public get name() {
+    return this._name;
+  }
 
-  getItems = () => this.items;
+  public get owner() {
+    return this._owner;
+  }
 
-  getCapacity = () => this.capacity;
+  public get items() {
+    return this._items;
+  }
 
-  computeValue = () =>
-    this.items
-      .map((item) => item.getValue())
+  public get capacity() {
+    return this._capacity;
+  }
+
+  computeValue() {
+    return this.items
+      .map((item) => item.value * item.amount)
       .reduce((sum, item) => sum + item, 0);
+  }
 
-  getValue = () => this.value;
+  public get value() {
+    return this._value;
+  }
 }
 
 export const inventoryConverter = {
   toFirestore: (inventory: Inventory) => {
     return {
-      name: inventory.getName(),
-      owner: inventory.getOwner(),
-      items: inventory.getItems(),
-      capacity: inventory.getCapacity(),
-      value: inventory.getValue(),
+      name: inventory.name,
+      owner: inventory.owner,
+      items: inventory.items,
+      capacity: inventory.capacity,
+      value: inventory.value,
     };
   },
   fromFirestore: (
@@ -64,6 +93,13 @@ export const inventoryConverter = {
     options: SnapshotOptions
   ) => {
     const data = snapshot.data(options);
-    return new Inventory(data.name, data.owner, data.items, data.capacity);
+    
+    return new Inventory(
+      snapshot.id,
+      data.name,
+      data.owner,
+      data.items.map((item: Item) => new Item(item.name, item.amount, item.value)),
+      data.capacity
+    );
   },
 };
