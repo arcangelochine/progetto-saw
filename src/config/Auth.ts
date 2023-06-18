@@ -111,7 +111,7 @@ const getEmailOfUser = async (username: string) => {
 
   return getDocs(queryDoc)
     .then((snap) => {
-      return snap.docs[0].data().getEmail();
+      return snap.docs[0].data().email;
     })
     .catch(() => {
       return "";

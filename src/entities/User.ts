@@ -5,11 +5,11 @@ import {
 } from "firebase/firestore";
 
 export class User {
-  private username: string; // always lower case
-  private displayName: string; // case sensitive
-  private email: string;
-  private premium: boolean;
-  private registeredAt: Date;
+  private _username: string; // always lower case
+  private _displayName: string; // case sensitive
+  private _email: string;
+  private _premium: boolean;
+  private _registeredAt: Date;
 
   constructor(
     username: string,
@@ -18,32 +18,42 @@ export class User {
     premium: boolean,
     registeredAt: Date
   ) {
-    this.username = username;
-    this.displayName = displayName;
-    this.email = email;
-    this.premium = premium;
-    this.registeredAt = registeredAt;
+    this._username = username;
+    this._displayName = displayName;
+    this._email = email;
+    this._premium = premium;
+    this._registeredAt = registeredAt;
   }
 
-  getUsername = () => this.username;
+  public get username() {
+    return this._username;
+  }
 
-  getDisplayName = () => this.displayName;
+  public get displayName() {
+    return this._displayName;
+  }
 
-  getEmail = () => this.email;
+  public get email() {
+    return this._email;
+  }
 
-  getRegisterDate = () => this.registeredAt;
+  public get premium() {
+    return this._premium;
+  }
 
-  isPremium = () => this.premium;
+  public get registeredAt() {
+    return this._registeredAt;
+  }
 }
 
 export const userConverter = {
   toFirestore: (user: User) => {
     return {
-      username: user.getUsername(),
-      display_name: user.getDisplayName(),
-      email: user.getEmail(),
-      premium: user.isPremium(),
-      registered_at: Timestamp.fromDate(user.getRegisterDate()),
+      username: user.username,
+      display_name: user.displayName,
+      email: user.email,
+      premium: user.premium,
+      registered_at: Timestamp.fromDate(user.registeredAt),
     };
   },
   fromFirestore: (
