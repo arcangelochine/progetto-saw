@@ -28,15 +28,14 @@ export const Body = styled(Column)`
 `;
 
 export const Header = styled(Column)`
-  padding: 10px;
-  padding-bottom: 30px;
+  padding: 30px;
 
   border-bottom: 4px dashed var(--secondary);
 `;
 
 export const Content = styled(Column)`
-  padding: 10px;
-  gap: 30px;
+  padding: 30px;
+  gap: 15px;
 
   padding-bottom: 100px;
 `;
