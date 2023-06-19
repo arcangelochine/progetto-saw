@@ -50,7 +50,7 @@ export const userConverter = {
   toFirestore: (user: User) => {
     return {
       username: user.username,
-      display_name: user.displayName,
+      displayName: user.displayName,
       email: user.email,
       premium: user.premium,
       registeredAt: Timestamp.fromDate(user.registeredAt),
@@ -63,7 +63,7 @@ export const userConverter = {
     const data = snapshot.data(options);
     return new User(
       data.username,
-      data.display_name,
+      data.displayName,
       data.email,
       data.premium,
       new Date(data.registeredAt)
