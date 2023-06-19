@@ -32,20 +32,33 @@ export class Inventory {
   private _items: Array<Item>;
   private _capacity: number;
   private _value: number;
+  private _createdAt: Date;
+  private _updatedAt: Date;
 
   constructor(
     uid: string | null,
     name: string,
     owner: string,
     items: Array<Item>,
-    capacity: number
+    capacity: number,
+    value?: number,
+    createdAt?: Date,
+    updatedAt?: Date
   ) {
     this._uid = uid;
     this._name = name;
     this._owner = owner;
     this._items = items;
     this._capacity = capacity;
-    this._value = this.computeValue();
+
+    if (value) this._value = value;
+    else this._value = this.computeValue();
+
+    if (createdAt) this._createdAt = createdAt;
+    else this._createdAt = new Date();
+
+    if (updatedAt) this._updatedAt = updatedAt;
+    else this._updatedAt = this._createdAt;
   }
 
   public get uid() {
@@ -77,6 +90,14 @@ export class Inventory {
   public get value() {
     return this._value;
   }
+
+  public get createdAt() {
+    return this._createdAt;
+  }
+
+  public get updatedAt() {
+    return this._updatedAt;
+  }
 }
 
 export const inventoryConverter = {
@@ -94,13 +115,16 @@ export const inventoryConverter = {
     options: SnapshotOptions
   ) => {
     const data = snapshot.data(options);
-    
+
     return new Inventory(
       snapshot.id,
       data.name,
       data.owner,
-      data.items.map((item: Item) => new Item(item.name, item.amount, item.value)),
-      data.capacity
+      data.items.map(
+        (item: Item) => new Item(item.name, item.amount, item.value)
+      ),
+      data.capacity,
+      data.value
     );
   },
 };
