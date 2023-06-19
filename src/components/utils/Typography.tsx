@@ -1,20 +1,20 @@
 import { styled } from "styled-components";
 
 export const Title = styled.h1`
-  font-size: 40px;
+  font-size: 48px;
   font-weight: bold;
 
   @media only screen and (max-width: 768px) {
-    font-size: 30px;
+    font-size: 32px;
   }
 `;
 
 export const Subtitle = styled.h1`
-  font-size: 30px;
+  font-size: 32px;
   font-weight: medium;
 
   @media only screen and (max-width: 768px) {
-    font-size: 20px;
+    font-size: 24px;
   }
 `;
 
