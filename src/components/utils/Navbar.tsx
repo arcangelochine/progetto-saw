@@ -46,15 +46,13 @@ const NavbarItem = styled(Link)`
   }
 `;
 
-const InventoryScrollButton = styled.button`
+const InventoryScrollButton = styled.span`
   width: 100%;
   display: inline-block;
   text-align: center;
   vertical-align: auto;
   padding: 10px;
   cursor: pointer;
-
-  border: 3px solid var(--bg);
 
   background-color: var(--bg);
   color: var(--text);
