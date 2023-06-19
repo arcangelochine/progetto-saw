@@ -108,6 +108,8 @@ export const inventoryConverter = {
       items: inventory.items,
       capacity: inventory.capacity,
       value: inventory.value,
+      createdAt: inventory.createdAt,
+      updatedAt: inventory.updatedAt,
     };
   },
   fromFirestore: (
@@ -124,7 +126,9 @@ export const inventoryConverter = {
         (item: Item) => new Item(item.name, item.amount, item.value)
       ),
       data.capacity,
-      data.value
+      data.value,
+      data.createdAt,
+      data.updatedAt
     );
   },
 };
