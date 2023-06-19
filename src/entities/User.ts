@@ -53,7 +53,7 @@ export const userConverter = {
       display_name: user.displayName,
       email: user.email,
       premium: user.premium,
-      registered_at: Timestamp.fromDate(user.registeredAt),
+      registeredAt: Timestamp.fromDate(user.registeredAt),
     };
   },
   fromFirestore: (
@@ -66,7 +66,7 @@ export const userConverter = {
       data.display_name,
       data.email,
       data.premium,
-      new Date(data.registered_at)
+      new Date(data.registeredAt)
     );
   },
 };

@@ -1,4 +1,8 @@
-import { QueryDocumentSnapshot, SnapshotOptions } from "firebase/firestore";
+import {
+  QueryDocumentSnapshot,
+  SnapshotOptions,
+  Timestamp,
+} from "firebase/firestore";
 
 export class Item {
   private _name: string;
@@ -108,8 +112,8 @@ export const inventoryConverter = {
       items: inventory.items,
       capacity: inventory.capacity,
       value: inventory.value,
-      createdAt: inventory.createdAt,
-      updatedAt: inventory.updatedAt,
+      createdAt: Timestamp.fromDate(inventory.createdAt),
+      updatedAt: Timestamp.fromDate(inventory.updatedAt),
     };
   },
   fromFirestore: (
@@ -127,8 +131,8 @@ export const inventoryConverter = {
       ),
       data.capacity,
       data.value,
-      data.createdAt,
-      data.updatedAt
+      new Date(data.createdAt),
+      new Date(data.updatedAt)
     );
   },
 };
