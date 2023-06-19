@@ -1,5 +1,7 @@
 import { User, userConverter } from "./User";
-import { Item, Inventory, inventoryConverter } from "./Inventory";
+import { Inventory, inventoryConverter } from "./Inventory";
+import { Item } from "./Item";
 
 export { User, userConverter };
-export { Item, Inventory, inventoryConverter };
+export { Inventory, inventoryConverter };
+export { Item };

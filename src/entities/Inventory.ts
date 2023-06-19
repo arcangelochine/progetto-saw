@@ -3,30 +3,7 @@ import {
   SnapshotOptions,
   Timestamp,
 } from "firebase/firestore";
-
-export class Item {
-  private _name: string;
-  private _amount: number;
-  private _value: number;
-
-  constructor(name: string, amount: number, value: number) {
-    this._name = name;
-    this._amount = amount;
-    this._value = value;
-  }
-
-  public get name() {
-    return this._name;
-  }
-
-  public get amount() {
-    return this._amount;
-  }
-
-  public get value() {
-    return this._value;
-  }
-}
+import { Item } from "./Item";
 
 export class Inventory {
   // Lo uid è null in fase di creazione dell'inventario
@@ -101,6 +78,18 @@ export class Inventory {
 
   public get updatedAt() {
     return this._updatedAt;
+  }
+
+  public set name(value: string) {
+    this._name = value;
+  }
+
+  public set items(value: Array<Item>) {
+    this._items = value;
+  }
+
+  public set updatedAt(value: Date) {
+    this._updatedAt = value;
   }
 }
 
