@@ -14,6 +14,8 @@ const DEFAULT_INVENTORY_CAPACITY = 1000;
 const PREMIUM_INVENTORY_AMOUNT = 10;
 const PREMIUM_INVENTORY_CAPACITY = 5000;
 
+export class DocumentNotFoundError extends Error {}
+
 const inventories = collection(db, "inventories").withConverter(
   inventoryConverter
 );
@@ -35,6 +37,18 @@ export const getInventoriesOfUser = async (user: User) => {
 
   return getDocs(queryDoc).then((snap) => {
     return snap.docs.map((doc) => doc.data());
+  });
+};
+
+export const getInventoryOfUser = async (user: User, docId: string) => {
+  if (docId.length === 0) throw new DocumentNotFoundError();
+
+  const queryDoc = query(inventories, where("owner", "==", user.email));
+
+  return getDocs(queryDoc).then((snap) => {
+    if (snap.empty) throw new DocumentNotFoundError();
+
+    return snap.docs.filter((doc) => doc.id === docId);
   });
 };
 
