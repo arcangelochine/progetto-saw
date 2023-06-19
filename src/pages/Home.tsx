@@ -20,7 +20,13 @@ const Home = () => {
       <Navbar page="HOME" />
       <Header>
         <Title>
-          Bentornato, <Gradient>{user?.displayName}</Gradient>
+          {user?.displayName ? (
+            <>
+              Bentornato, <Gradient>{user.displayName}</Gradient>
+            </>
+          ) : (
+            <>Benvenuto</>
+          )}
         </Title>
       </Header>
       <Content>
