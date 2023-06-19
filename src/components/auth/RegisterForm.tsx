@@ -67,55 +67,57 @@ const RegisterForm = () => {
     setLoading(true);
 
     // variabili locali su cui fare il check
-    let checksum = [
-      usernameIsValid,
-      emailIsValid,
-      passwordIsValid,
-      confirmPasswordIsValid,
-    ];
+    let checksum = true;
 
     // Validazione (offline) username
     if (username.length === 0) {
       setUsernameErrorMessage(REQUIRED_ERROR);
       setUsernameIsValid(false);
+      checksum = false;
     }
 
     if (username.length > 0 && username.length < MIN_USERNAME_LENGTH) {
       setUsernameErrorMessage(TOO_SHORT_ERROR);
       setUsernameIsValid(false);
+      checksum = false;
     }
 
     if (username.length > MAX_USERNAME_LENGTH) {
       setUsernameErrorMessage(TOO_LONG_ERROR);
       setUsernameIsValid(false);
+      checksum = false;
     }
 
     // Validazione (offline) email
     if (email.length === 0) {
       setEmailErrorMessage(REQUIRED_ERROR);
       setEmailIsValid(false);
+      checksum = false;
     }
 
     // Validazione (offline) password
     if (password.length === 0) {
       setPasswordErrorMessage(REQUIRED_ERROR);
       setPasswordIsValid(false);
+      checksum = false;
     }
 
     // Validazione (offline) confirmPassword
     if (confirmPassword.length === 0) {
       setConfirmPasswordErrorMessage(REQUIRED_ERROR);
       setConfirmPasswordIsValid(false);
+      checksum = false;
     }
 
     if (confirmPassword.length)
       if (password !== confirmPassword) {
         setConfirmPasswordErrorMessage(NOT_EQUAL_ERROR);
         setConfirmPasswordIsValid(false);
+        checksum = false;
       }
 
     // Almeno un campo non è valido
-    if (!checksum.reduce((a, b) => a && b, true)) {
+    if (!checksum) {
       setLoading(false);
       return;
     }
