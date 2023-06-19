@@ -28,7 +28,7 @@ import { useNavigate } from "react-router-dom";
 const ListContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 32px;
 `;
 
 interface InventoryCardProps {
