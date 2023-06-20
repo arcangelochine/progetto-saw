@@ -9,7 +9,9 @@ const ButtonProps = styled.button`
 
   font-size: 14px;
   padding: 10px;
-  border:none;
+  border: none;
+
+  border-radius: 10px;
 
   &:hover {
     transform: translateY(-2px);
@@ -23,11 +25,16 @@ const ButtonProps = styled.button`
 `;
 
 export const PrimaryButton = styled(ButtonProps)`
-  background-color: var(--text);
+  background-color: var(--primary);
   color: var(--bg);
 `;
 
 export const SecondaryButton = styled(ButtonProps)`
   background-color: var(--secondary);
   color: var(--text);
+`;
+
+export const DangerButton = styled(ButtonProps)`
+  background-color: var(--error);
+  color: var(--bg);
 `;
