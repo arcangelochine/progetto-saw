@@ -5,7 +5,15 @@ import {
   inventoryConverter,
   userConverter,
 } from "../entities";
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import { User } from "firebase/auth";
 
 const DEFAULT_INVENTORY_NAME = "Nuovo inventario";
@@ -75,4 +83,10 @@ export const createInventory = async (user: User) => {
       capacity
     )
   );
+};
+
+export const deleteInventory = async (user: User, docId: string) => {
+  return getInventoryOfUser(user, docId).then((snap) => {
+    if (snap[0]) return deleteDoc(doc(db, "inventories", snap[0].id));
+  });
 };
