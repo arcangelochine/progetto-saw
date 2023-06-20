@@ -11,7 +11,7 @@ import {
   faArrowDown,
   faChartLine,
   faQuestionCircle,
-  faUser,
+  faGear,
   faRightToBracket,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -147,7 +147,7 @@ const Navbar = ({ page }: NavbarProps) => {
           <IconContainer icon={faQuestionCircle} />
         </NavbarItem>
         <NavbarItem href="/edit" className={`${page === "EDIT" && "active"}`}>
-          <IconContainer icon={faUser} />
+          <IconContainer icon={faGear} />
         </NavbarItem>
       </NavbarContainer>
     );
