@@ -1,12 +1,11 @@
-import { ItemTable } from "../components/inventory";
-import { Body, Navbar } from "../components/utils";
+import { Body, Content, Navbar } from "../components/utils";
 
-// Pagina con la lista degli elementi di un inventario
+// Pagina con lista degli inventari
 const InventoryTable = () => {
   return (
     <Body>
       <Navbar page="INVENTORY_TABLE" />
-      <ItemTable />
+      <Content></Content>
     </Body>
   );
 };
