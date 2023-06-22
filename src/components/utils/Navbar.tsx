@@ -35,7 +35,7 @@ const NavbarItem = styled(Link)`
   display: inline-block;
   text-align: center;
   vertical-align: auto;
-  padding: 10px;
+  padding: 8px;
 
   background-color: var(--text);
   color: var(--bg);

@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { WrongCredentialError, login } from "../../config/Auth";
-import { AuthErrorContainer, Form, InputButton, InputWithLabel } from "../utils";
+import {
+  AuthErrorContainer,
+  Form,
+  InputWithLabel,
+  PrimaryButton,
+} from "../utils";
 
 const UNKNOWN_ERROR = "Errore del server";
 const LOGIN_ERROR = "Credenziali errate";
@@ -76,9 +81,9 @@ const LoginForm = () => {
           setPassword(e.currentTarget.value);
         }}
       />
-      <InputButton type="submit" disabled={loading}>
+      <PrimaryButton type="submit" disabled={loading}>
         Accedi
-      </InputButton>
+      </PrimaryButton>
     </Form>
   );
 };

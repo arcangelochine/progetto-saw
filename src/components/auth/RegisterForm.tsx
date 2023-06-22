@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import {
   AuthErrorContainer,
   Form,
-  InputButton,
   InputWithLabel,
+  PrimaryButton,
 } from "../utils";
 import {
   AlreadyInUseError,
@@ -275,9 +275,9 @@ const RegisterForm = () => {
           setConfirmPasswordIsValid(true);
         }}
       />
-      <InputButton type="submit" disabled={loading}>
+      <PrimaryButton type="submit" disabled={loading}>
         Registrati
-      </InputButton>
+      </PrimaryButton>
     </Form>
   );
 };

@@ -7,9 +7,10 @@ const ButtonProps = styled.button`
 
   transition: transform 0.3s, box-shadow 0.3s;
 
-  font-size: 14px;
-  padding: 10px;
+  font-size: 16px;
+  padding: 8px 16px;
   border: none;
+  height: fit-content;
 
   border-radius: 10px;
 

@@ -1,24 +1,29 @@
 import { styled } from "styled-components";
 import { Column } from "./Containers";
-import { PrimaryButton } from "./Buttons";
 import { InputHTMLAttributes } from "react";
+
+export const Form = styled.form`
+  background-color: var(--secondary);
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  justify-content: center;
+  align-items: center;
+  padding: 32px;
+  border-radius: 10px;
+`;
 
 export const AuthErrorContainer = styled.div`
   background-color: var(--error);
   width: 100%;
-  padding: 10px;
+  padding: 8px;
   color: var(--bg);
   text-align: center;
-`;
-
-export const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+  border-radius: 10px;
 `;
 
 const Label = styled.span`
-  font-size: 14px;
+  font-size: 16px;
 `;
 
 const ErrorLabel = styled(Label)`
@@ -40,12 +45,6 @@ const CustomInput = styled.input`
   // Mobile: Safari e Chrome fanno uno zoom (fastidioso) della pagina se il font-size dell'input è minore di 16 px
   // https://stackoverflow.com/questions/2989263/disable-auto-zoom-in-input-text-tag-safari-on-iphone
   font-size: 16px;
-`;
-
-export const InputButton = styled(PrimaryButton)`
-  margin-top: 10px;
-  width: 150px;
-  height: 40px;
 `;
 
 const InputWithLabelContainer = styled(Column)`
