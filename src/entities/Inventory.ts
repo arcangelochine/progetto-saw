@@ -91,6 +91,12 @@ export class Inventory {
   public set updatedAt(value: Date) {
     this._updatedAt = value;
   }
+
+  public filterItemsByName(query: string) {
+    return this._items.filter((item) =>
+      item.name.toLowerCase().includes(query.toLowerCase())
+    );
+  }
 }
 
 export const inventoryConverter = {
