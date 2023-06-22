@@ -50,6 +50,7 @@ const CustomInput = styled.input`
 const InputWithLabelContainer = styled(Column)`
   box-sizing: border-box;
   gap: 4px;
+  width: 100%;
 `;
 
 interface InputWithLabelProps extends InputHTMLAttributes<HTMLInputElement> {

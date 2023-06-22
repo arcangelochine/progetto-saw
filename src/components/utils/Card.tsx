@@ -1,10 +1,14 @@
 import { styled } from "styled-components";
 
-export const Card = styled.div`
+const FluidContainer = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
-  padding: 16px;
-  width: 100%;
+  gap: 0;
+`;
+
+export const Card = styled(FluidContainer)`
+  padding: 32px;
   border-radius: 10px;
 
   color: var(--text);
@@ -33,43 +37,24 @@ export const ClickableCard = styled(Card)`
   }
 `;
 
-export const CardHeader = styled.div`
-  padding-bottom: 10px;
+export const CardHeader = styled(FluidContainer)`
+  padding-bottom: 16px;
+  margin-bottom: 16px;
   border-bottom: 1px solid var(--bg);
 `;
 
-export const CardContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 10px 0;
-  gap: 10px;
-  width: 100%;
-
-  color: inherit;
+export const CardContent = styled(FluidContainer)`
+  gap: 16px;
 `;
 
-export const CardFooter = styled.div`
-  display: flex;
-  flex-direction: column;
+export const CardFooter = styled(FluidContainer)`
+  margin-top: 16px;
   align-items: flex-end;
-  padding: 0 10px;
-  width: 100%;
-
-  color: inherit;
 `;
 
-export const CardProperty = styled(CardContent)`
+export const CardProperty = styled(FluidContainer)`
   padding: 0;
-  gap: 2px;
-`;
-
-export const CardErrorLabel = styled.span`
-  padding: 4px 6px;
-  border-radius: 10px;
-  background-color: var(--error);
-  font-size: inherit;
-  font-weight: inherit;
-  text-transform: uppercase;
+  gap: 4px;
 `;
 
 export const CardCenterContent = styled(CardContent)`
