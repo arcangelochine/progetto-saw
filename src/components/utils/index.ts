@@ -18,7 +18,15 @@ import {
   Content,
   IconContainer,
 } from "./Containers";
-import { AuthErrorContainer, Form, InputWithLabel } from "./Form";
+import { AuthErrorContainer, Form, CustomInput, InputWithLabel } from "./Form";
+import {
+  ModalBackground,
+  Modal,
+  ModalHeader,
+  ModalContent,
+  ModalFooter,
+  KeywordInput,
+} from "./Modal";
 import Navbar from "./Navbar";
 import PrivateRoute from "./PrivateRoute";
 import Spinner from "./Spinner";
@@ -46,7 +54,15 @@ export {
   CardCenterContent,
 };
 export { Column, Row, Center, Body, Header, Content, IconContainer };
-export { AuthErrorContainer, Form, InputWithLabel };
+export { AuthErrorContainer, Form, CustomInput, InputWithLabel };
+export {
+  ModalBackground,
+  Modal,
+  ModalHeader,
+  ModalContent,
+  ModalFooter,
+  KeywordInput,
+};
 export { Navbar };
 export { Spinner };
 export { PrivateRoute };

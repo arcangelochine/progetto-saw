@@ -35,7 +35,7 @@ const ErrorLabel = styled(Label)`
   color: var(--error);
 `;
 
-const CustomInput = styled.input`
+export const CustomInput = styled.input`
   width: 100%;
   padding: 8px;
   color: var(--text);
