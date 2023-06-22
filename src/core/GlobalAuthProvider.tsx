@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, createContext } from "react";
 import { auth } from "../config/firebase";
 import { User, onAuthStateChanged } from "firebase/auth";
 import { Center, Spinner, Title } from "../components/utils";
 
 type AuthContextType = User | null;
 
-export const AuthContext = React.createContext<AuthContextType>(null);
+export const AuthContext = createContext<AuthContextType>(null);
 
 interface AuthProviderProps {
   children?: React.ReactNode;
