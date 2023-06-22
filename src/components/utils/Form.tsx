@@ -1,6 +1,7 @@
 import { styled } from "styled-components";
 import { Column } from "./Containers";
 import { PrimaryButton } from "./Buttons";
+import { InputHTMLAttributes } from "react";
 
 export const AuthErrorContainer = styled.div`
   background-color: var(--error);
@@ -13,7 +14,7 @@ export const AuthErrorContainer = styled.div`
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap:24px;
+  gap: 24px;
 `;
 
 const Label = styled.span`
@@ -30,13 +31,11 @@ const ErrorLabel = styled(Label)`
 `;
 
 const CustomInput = styled.input`
-  width: 150px;
-  height: 40px;
-  padding: 0 10px;
-
-  background-color: var(--bg);
+  width: 100%;
+  padding: 8px;
   color: var(--text);
-  border: 1px solid var(--text);
+  border: none;
+  border-radius: 10px;
 
   // Mobile: Safari e Chrome fanno uno zoom (fastidioso) della pagina se il font-size dell'input è minore di 16 px
   // https://stackoverflow.com/questions/2989263/disable-auto-zoom-in-input-text-tag-safari-on-iphone
@@ -54,39 +53,22 @@ const InputWithLabelContainer = styled(Column)`
   gap: 4px;
 `;
 
-interface InputWithLabelProps {
+interface InputWithLabelProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
-  type: string;
-  value: string;
-  length?: number;
   isValid?: boolean;
   errorMessage?: string;
-
-  onChange?: React.ChangeEventHandler<HTMLInputElement>;
-  onFocus?: React.FocusEventHandler<HTMLInputElement>;
 }
 
 export const InputWithLabel = ({
   label,
-  type,
-  value,
-  length,
-  isValid = true,
+  isValid,
   errorMessage,
-  onChange,
-  onFocus,
+  ...inputProps
 }: InputWithLabelProps) => {
   return (
     <InputWithLabelContainer>
       {!!label && <Label>{label}</Label>}
-      <CustomInput
-        type={type}
-        maxLength={length}
-        value={value}
-        onChange={onChange}
-        onFocus={onFocus}
-        required
-      />
+      <CustomInput {...inputProps} />
       {!isValid && <ErrorLabel>{errorMessage}</ErrorLabel>}
     </InputWithLabelContainer>
   );

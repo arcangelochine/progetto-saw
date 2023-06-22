@@ -224,11 +224,11 @@ const RegisterForm = () => {
       {error && <AuthErrorContainer>{errorMessage}</AuthErrorContainer>}
       <InputWithLabel
         label="Username"
-        type="text"
-        value={username}
-        length={MAX_USERNAME_LENGTH}
         isValid={usernameIsValid}
         errorMessage={usernameErrorMessage}
+        type="text"
+        value={username}
+        maxLength={MAX_USERNAME_LENGTH}
         onChange={(e) => {
           setUsername(e.target.value);
         }}
@@ -238,10 +238,10 @@ const RegisterForm = () => {
       />
       <InputWithLabel
         label="Email"
-        type="text"
-        value={email}
         isValid={emailIsValid}
         errorMessage={emailErrorMessage}
+        type="text"
+        value={email}
         onChange={(e) => {
           setEmail(e.target.value);
         }}
@@ -251,10 +251,10 @@ const RegisterForm = () => {
       />
       <InputWithLabel
         label="Password"
-        type="password"
-        value={password}
         isValid={passwordIsValid}
         errorMessage={passwordErrorMessage}
+        type="password"
+        value={password}
         onChange={(e) => {
           setPassword(e.target.value);
         }}
@@ -264,10 +264,10 @@ const RegisterForm = () => {
       />
       <InputWithLabel
         label="Confirm password"
-        type="password"
-        value={confirmPassword}
         isValid={confirmPasswordIsValid}
         errorMessage={confirmPasswordErrorMessage}
+        type="password"
+        value={confirmPassword}
         onChange={(e) => {
           setConfirmPassword(e.target.value);
         }}
