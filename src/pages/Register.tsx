@@ -3,7 +3,6 @@ import {
   Accent,
   Body,
   Content,
-  Footer,
   Link,
   Navbar,
   Paragraph,
@@ -23,7 +22,6 @@ const Register = () => {
           </Link>
         </Paragraph>
       </Content>
-      <Footer />
     </Body>
   );
 };

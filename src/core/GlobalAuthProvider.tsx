@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { auth } from "../config/firebase";
 import { User, onAuthStateChanged } from "firebase/auth";
-import { Spinner } from "../components/utils";
+import { Center, Spinner, Title } from "../components/utils";
 
 type AuthContextType = User | null;
 
@@ -25,7 +25,14 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   // Mentre sta caricando, mostra uno spinner
-  if (loading) return <Spinner />;
+  if (loading)
+    return (
+      <Center>
+        <Title>
+          <Spinner />
+        </Title>
+      </Center>
+    );
 
   return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>;
 };

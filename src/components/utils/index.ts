@@ -19,7 +19,6 @@ import {
   Content,
   IconContainer,
 } from "./Containers";
-import Footer from "./Footer";
 import { AuthErrorContainer, Form, InputButton, InputWithLabel } from "./Form";
 import Navbar from "./Navbar";
 import PrivateRoute from "./PrivateRoute";
@@ -49,11 +48,10 @@ export {
   CardCenterContent,
 };
 export { Column, Row, Center, Body, Header, Content, IconContainer };
-export { Footer };
 export { AuthErrorContainer, Form, InputButton, InputWithLabel };
 export { Navbar };
-export { PrivateRoute };
 export { Spinner };
+export { PrivateRoute };
 export {
   Title,
   Subtitle,
