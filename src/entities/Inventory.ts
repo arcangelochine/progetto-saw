@@ -97,6 +97,14 @@ export class Inventory {
       item.name.toLowerCase().includes(query.toLowerCase())
     );
   }
+
+  public addItem(item: Item) {
+    this._items.push(item);
+    this._value = this.computeValue();
+    this._updatedAt = new Date();
+
+    return this;
+  }
 }
 
 export const inventoryConverter = {
