@@ -5,6 +5,7 @@
   --text: #0d1110;
   --primary: #4685ff;
   --secondary: #eaeefb;
+  --secondary-darker: #dde3f8;
   --accent: #1f74d6;
   --error: #ff4040;
 }
@@ -22,7 +23,7 @@ h1 {
 }
 
 a {
-  color: var(--accent)
+  color: var(--accent);
 }
 
 html {
