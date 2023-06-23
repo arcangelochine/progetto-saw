@@ -41,6 +41,10 @@ export const CardHeader = styled(FluidContainer)`
   padding-bottom: 16px;
   margin-bottom: 16px;
   border-bottom: 1px solid var(--bg);
+
+  &.dark {
+    border-bottom: 1px solid var(--text);
+  }
 `;
 
 export const CardContent = styled(FluidContainer)`
