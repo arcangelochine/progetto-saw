@@ -21,6 +21,8 @@ export const Modal = styled(Card)`
   justify-content: center;
   align-items: center;
   text-align: center;
+
+  gap: 32px;
 `;
 
 export const ModalHeader = styled.div``;
