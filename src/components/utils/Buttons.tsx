@@ -14,14 +14,18 @@ const ButtonProps = styled.button`
 
   border-radius: 10px;
 
-  &:hover {
+  &:hover:enabled {
     transform: translateY(-2px);
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
   }
 
-  &:active {
+  &:active:enabled {
     transform: translateY(2px);
     box-shadow: none;
+  }
+
+  &:disabled {
+    cursor: default;
   }
 `;
 
