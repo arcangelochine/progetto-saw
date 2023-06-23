@@ -66,7 +66,7 @@ export const userConverter = {
       data.displayName,
       data.email,
       data.premium,
-      new Date(data.registeredAt)
+      new Date(data.registeredAt.toDate())
     );
   },
 };

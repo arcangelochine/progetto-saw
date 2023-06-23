@@ -126,8 +126,8 @@ export const inventoryConverter = {
       ),
       data.capacity,
       data.value,
-      new Date(data.createdAt),
-      new Date(data.updatedAt)
+      new Date(data.createdAt.toDate()),
+      new Date(data.updatedAt.toDate())
     );
   },
 };
