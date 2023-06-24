@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 import { Column } from "./Containers";
-import { InputHTMLAttributes } from "react";
+import { ForwardedRef, InputHTMLAttributes, forwardRef } from "react";
 
 export const Form = styled.form`
   background-color: var(--secondary);
@@ -59,17 +59,17 @@ interface InputWithLabelProps extends InputHTMLAttributes<HTMLInputElement> {
   errorMessage?: string;
 }
 
-export const InputWithLabel = ({
-  label,
-  isValid,
-  errorMessage,
-  ...inputProps
-}: InputWithLabelProps) => {
-  return (
-    <InputWithLabelContainer>
-      {!!label && <Label>{label}</Label>}
-      <CustomInput {...inputProps} />
-      {!isValid && <ErrorLabel>{errorMessage}</ErrorLabel>}
-    </InputWithLabelContainer>
-  );
-};
+export const InputWithLabel = forwardRef(
+  (
+    { label, isValid, errorMessage, ...inputProps }: InputWithLabelProps,
+    ref: ForwardedRef<HTMLInputElement>
+  ) => {
+    return (
+      <InputWithLabelContainer>
+        {!!label && <Label>{label}</Label>}
+        <CustomInput ref={ref} {...inputProps} />
+        {!isValid && <ErrorLabel>{errorMessage}</ErrorLabel>}
+      </InputWithLabelContainer>
+    );
+  }
+);
