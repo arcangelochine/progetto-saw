@@ -52,8 +52,10 @@ export const CardContent = styled(FluidContainer)`
 `;
 
 export const CardFooter = styled(FluidContainer)`
+  flex-direction: row;
+  gap: 16px;
   margin-top: 16px;
-  align-items: flex-end;
+  justify-content: flex-end;
 `;
 
 export const CardProperty = styled(FluidContainer)`
