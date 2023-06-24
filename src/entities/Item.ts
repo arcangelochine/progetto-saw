@@ -1,4 +1,5 @@
 export class Item {
+  private _uid: string;
   private _name: string;
   private _amount: number;
   private _value: number;
@@ -6,12 +7,14 @@ export class Item {
   private _updatedAt: Date;
 
   constructor(
+    uid: string,
     name: string,
     amount: number,
     value: number,
     createdAt?: Date,
     updatedAt?: Date
   ) {
+    this._uid = uid;
     this._name = name;
     this._amount = amount;
     this._value = value;
@@ -21,6 +24,10 @@ export class Item {
 
     if (updatedAt) this._updatedAt = updatedAt;
     else this._updatedAt = new Date();
+  }
+
+  public get uid() {
+    return this._uid;
   }
 
   public get name() {
@@ -43,19 +50,21 @@ export class Item {
     return this._updatedAt;
   }
 
-  public set name(value: string) {
-    this._name = value;
-  }
-
-  public set amount(value: number) {
-    this._amount = value;
-  }
-
-  public set value(value: number) {
+  /**
+   * 
+   * @note Aggiorna il campo **updatedAt**
+   * 
+   * @param name Il nuovo nome dell'oggetto
+   * @param amount La nuova quantità dell'oggetto
+   * @param value Il nuovo valore per unità dell'oggetto
+   * @returns L'oggetto aggiornato
+   */
+  public edit(name: string, amount: number, value: number) {
+    this._name = name;
+    this._amount = amount;
     this._value = value;
-  }
+    this._updatedAt = new Date();
 
-  public set updatedAt(value: Date) {
-    this._updatedAt = value;
+    return this;
   }
 }

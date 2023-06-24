@@ -5,6 +5,18 @@ import {
 } from "firebase/firestore";
 import { Item } from "./Item";
 
+function UID(length: number): string {
+  const characters = "abcdefghijklmnopqrstuvwxyz0123456789";
+  let uniqueID = "";
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    uniqueID += characters.charAt(randomIndex);
+  }
+
+  return uniqueID;
+}
+
 export class Inventory {
   // Lo uid è null in fase di creazione dell'inventario
   private _uid: string | null;
@@ -62,12 +74,6 @@ export class Inventory {
     return this._capacity;
   }
 
-  computeValue() {
-    return this.items
-      .map((item) => item.value * item.amount)
-      .reduce((sum, item) => sum + item, 0);
-  }
-
   public get value() {
     return this._value;
   }
@@ -80,26 +86,107 @@ export class Inventory {
     return this._updatedAt;
   }
 
-  public set name(value: string) {
-    this._name = value;
+  /**
+   *
+   * @note Utility per calcolare il valore dell'inventario in base alla lista di oggetti
+   *
+   * @returns Valore dell'inventario
+   */
+  private computeValue() {
+    return this.items
+      .map((item) => item.value * item.amount)
+      .reduce((sum, item) => sum + item, 0);
   }
 
-  public set items(value: Array<Item>) {
-    this._items = value;
+  /**
+   *
+   * @param name Il nuovo nome dell'inventario
+   * @returns L'inventario con il nuovo nome
+   */
+  public editName(name: string) {
+    this._name = name;
+    this._updatedAt = new Date();
+
+    return this;
   }
 
-  public set updatedAt(value: Date) {
-    this._updatedAt = value;
+  /**
+   *
+   * @param uid L'identificatore dell'oggetto
+   * @returns La lista di oggetti filtrata secondo l'identificatore
+   */
+  public filterItemsByUID(uid: string) {
+    return this.items.filter((item) => item.uid === uid);
   }
 
+  /**
+   *
+   * @param query Il nome (o parte di esso) dell'oggetto
+   * @returns La lista di oggetti filtrata secondo il nome (o parte di esso)
+   */
   public filterItemsByName(query: string) {
-    return this._items.filter((item) =>
+    return this.items.filter((item) =>
       item.name.toLowerCase().includes(query.toLowerCase())
     );
   }
 
-  public addItem(item: Item) {
-    this._items.push(item);
+  /**
+   *
+   * @note Aggiorna il campo **updatedAt**
+   *
+   * @param name Il nome del nuovo oggetto
+   * @param amount La quantità del nuovo oggetto
+   * @param value Il valore per unità del nuovo oggetto
+   *
+   * @returns L'inventario con la lista di oggetti aggiornata
+   */
+  public addItem(name: string, amount: number, value: number) {
+    let uid = UID(5);
+
+    while (this.filterItemsByUID(uid).length) uid = UID(5);
+
+    const item = new Item(uid, name, amount, value);
+
+    this._items = [...this._items, item];
+    this._value = this.computeValue();
+    this._updatedAt = new Date();
+
+    return this;
+  }
+
+  /**
+   *
+   * @note Aggiorna il campo **updatedAt**
+   * @note Aggiorna il campo **updatedAt** dell'oggetto
+   *
+   * @param uid L'identificatore dell'oggetto da modificare
+   * @param name Il nuovo nome dell'oggetto
+   * @param amount La nuova quantità dell'oggetto
+   * @param value Il nuovo valore per unità dell'oggetto
+   * @returns L'inventario con la lista di oggetti aggiornata
+   */
+  public editItem(uid: string, name: string, amount: number, value: number) {
+    this._items = this.items.map((item) => {
+      if (item.uid === uid) {
+        return item.edit(name, amount, value);
+      }
+      return item;
+    });
+    this._value = this.computeValue();
+    this._updatedAt = new Date();
+
+    return this;
+  }
+
+  /**
+   *
+   * @note Aggiorna il campo **updatedAt**
+   *
+   * @param uid L'identificatore dell'oggetto da eliminare
+   * @returns L'inventario con la lista di oggetti aggiornata
+   */
+  public deleteItem(uid: string) {
+    this._items = this.items.filter((item) => item.uid !== uid);
     this._value = this.computeValue();
     this._updatedAt = new Date();
 
@@ -130,7 +217,7 @@ export const inventoryConverter = {
       data.name,
       data.owner,
       data.items.map(
-        (item: Item) => new Item(item.name, item.amount, item.value)
+        (item: Item) => new Item(item.uid, item.name, item.amount, item.value)
       ),
       data.capacity,
       data.value,
