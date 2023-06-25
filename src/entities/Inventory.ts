@@ -4,8 +4,9 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import { Item, itemConverter } from "./Item";
+import { Record, recordConverter, toRecordFormat } from "./Record";
 
-function UID(length: number): string {
+const UID = (length: number): string => {
   const characters = "abcdefghijklmnopqrstuvwxyz0123456789";
   let uniqueID = "";
 
@@ -15,7 +16,7 @@ function UID(length: number): string {
   }
 
   return uniqueID;
-}
+};
 
 export class Inventory {
   // Lo uid è null in fase di creazione dell'inventario
@@ -25,6 +26,7 @@ export class Inventory {
   private _items: Array<Item>;
   private _capacity: number;
   private _value: number;
+  private _history: Array<Record>;
   private _createdAt: Date;
   private _updatedAt: Date;
 
@@ -35,6 +37,7 @@ export class Inventory {
     items: Array<Item>,
     capacity: number,
     value?: number,
+    history?: Array<Record>,
     createdAt?: Date,
     updatedAt?: Date
   ) {
@@ -43,15 +46,10 @@ export class Inventory {
     this._owner = owner;
     this._items = items;
     this._capacity = capacity;
-
-    if (value) this._value = value;
-    else this._value = this.computeValue();
-
-    if (createdAt) this._createdAt = createdAt;
-    else this._createdAt = new Date();
-
-    if (updatedAt) this._updatedAt = updatedAt;
-    else this._updatedAt = this._createdAt;
+    this._value = value || this.computeValue();
+    this._history = history || new Array<Record>();
+    this._createdAt = createdAt || new Date();
+    this._updatedAt = updatedAt || this._createdAt;
   }
 
   public get uid() {
@@ -78,6 +76,10 @@ export class Inventory {
     return this._value;
   }
 
+  public get history() {
+    return this._history;
+  }
+
   public get createdAt() {
     return this._createdAt;
   }
@@ -99,6 +101,54 @@ export class Inventory {
   }
 
   /**
+   *
+   * @note Utility per aggiornare lo storico dell'inventario
+   * @note Lo storico contiene i **Record** dei 7 giorni più recenti in cui è avvenuta una modifca dell'inventario
+   */
+  private updateHistory() {
+    const today = toRecordFormat(new Date());
+
+    if (this._history.length === 7) {
+      // History piena
+      if (this._history.filter((record) => record.date === today).length) {
+        // Oggi è già avvenuta una modifica
+        this._history = this._history.filter((record) => {
+          if (record.date === today) return record.set(this._items);
+
+          return record;
+        });
+      } else {
+        // Oggi non è avvenuta alcuna modifica
+        this._history = this._history.sort(
+          (a, b) => Date.parse(b.date) - Date.parse(a.date)
+        );
+
+        this._history.pop();
+        this._history.unshift(new Record(today).set(this._items));
+      }
+
+      return;
+    }
+
+    // History non piena
+    if (this._history.filter((record) => record.date === today).length) {
+      // Oggi è già avvenuta una modifica
+      this._history = this._history.map((record) => {
+        if (record.date === today) return record.set(this._items);
+
+        return record;
+      });
+    } else {
+      // Oggi non è avvenuta alcuna modifica
+      const record = new Record(today).set(this._items);
+
+      this._history = [...this._history, record];
+    }
+  }
+
+  /**
+   *
+   * @note Aggiorna il campo **updatedAt**
    *
    * @param name Il nuovo nome dell'inventario
    * @returns L'inventario con il nuovo nome
@@ -133,6 +183,7 @@ export class Inventory {
   /**
    *
    * @note Aggiorna il campo **updatedAt**
+   * @note Aggiorna il campo **history**
    *
    * @param name Il nome del nuovo oggetto
    * @param amount La quantità del nuovo oggetto
@@ -149,6 +200,7 @@ export class Inventory {
 
     this._items = [...this._items, item];
     this._value = this.computeValue();
+    this.updateHistory();
     this._updatedAt = new Date();
 
     return this;
@@ -158,6 +210,7 @@ export class Inventory {
    *
    * @note Aggiorna il campo **updatedAt**
    * @note Aggiorna il campo **updatedAt** dell'oggetto
+   * @note Aggiorna il campo **history**
    *
    * @param uid L'identificatore dell'oggetto da modificare
    * @param name Il nuovo nome dell'oggetto
@@ -173,6 +226,7 @@ export class Inventory {
       return item;
     });
     this._value = this.computeValue();
+    this.updateHistory();
     this._updatedAt = new Date();
 
     return this;
@@ -181,6 +235,7 @@ export class Inventory {
   /**
    *
    * @note Aggiorna il campo **updatedAt**
+   * @note Aggiorna il campo **history**
    *
    * @param uid L'identificatore dell'oggetto da eliminare
    * @returns L'inventario con la lista di oggetti aggiornata
@@ -188,6 +243,7 @@ export class Inventory {
   public deleteItem(uid: string) {
     this._items = this.items.filter((item) => item.uid !== uid);
     this._value = this.computeValue();
+    this.updateHistory();
     this._updatedAt = new Date();
 
     return this;
@@ -202,6 +258,9 @@ export const inventoryConverter = {
       items: inventory.items.map((item) => itemConverter.toFirestore(item)),
       capacity: inventory.capacity,
       value: inventory.value,
+      history: inventory.history.map((record) =>
+        recordConverter.toFirestore(record)
+      ),
       createdAt: Timestamp.fromDate(inventory.createdAt),
       updatedAt: Timestamp.fromDate(inventory.updatedAt),
     };
@@ -216,11 +275,15 @@ export const inventoryConverter = {
       snapshot.id,
       data.name,
       data.owner,
-      data.items.map(
-        (item: Item) => new Item(item.uid, item.name, item.amount, item.value)
-      ),
+      data.items.map((item: Item) => {
+        return new Item(item.uid, item.name, item.amount, item.value);
+      }),
       data.capacity,
       data.value,
+      data.history.map(
+        (record: Record) =>
+          new Record(record.date, record.value, record.mean, record.deviation)
+      ),
       new Date(data.createdAt.toDate()),
       new Date(data.updatedAt.toDate())
     );

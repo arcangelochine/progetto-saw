@@ -1,35 +1,16 @@
-import {
-  QueryDocumentSnapshot,
-  SnapshotOptions,
-  Timestamp,
-} from "firebase/firestore";
+import { QueryDocumentSnapshot, SnapshotOptions } from "firebase/firestore";
 
 export class Item {
   private _uid: string;
   private _name: string;
   private _amount: number;
   private _value: number;
-  private _createdAt: Date;
-  private _updatedAt: Date;
 
-  constructor(
-    uid: string,
-    name: string,
-    amount: number,
-    value: number,
-    createdAt?: Date,
-    updatedAt?: Date
-  ) {
+  constructor(uid: string, name: string, amount: number, value: number) {
     this._uid = uid;
     this._name = name;
     this._amount = amount;
     this._value = value;
-
-    if (createdAt) this._createdAt = createdAt;
-    else this._createdAt = new Date();
-
-    if (updatedAt) this._updatedAt = updatedAt;
-    else this._updatedAt = new Date();
   }
 
   public get uid() {
@@ -48,17 +29,7 @@ export class Item {
     return this._value;
   }
 
-  public get createdAt() {
-    return this._createdAt;
-  }
-
-  public get updatedAt() {
-    return this._updatedAt;
-  }
-
   /**
-   *
-   * @note Aggiorna il campo **updatedAt**
    *
    * @param name Il nuovo nome dell'oggetto
    * @param amount La nuova quantità dell'oggetto
@@ -69,7 +40,6 @@ export class Item {
     this._name = name;
     this._amount = amount;
     this._value = value;
-    this._updatedAt = new Date();
 
     return this;
   }
@@ -82,8 +52,6 @@ export const itemConverter = {
       name: item.name,
       amount: item.amount,
       value: item.value,
-      createdAt: Timestamp.fromDate(item.createdAt),
-      updatedAt: Timestamp.fromDate(item.updatedAt),
     };
   },
   fromFirestore: (
@@ -92,13 +60,6 @@ export const itemConverter = {
   ) => {
     const data = snapshot.data(options);
 
-    return new Item(
-      data.uid,
-      data.name,
-      data.amount,
-      data.value,
-      new Date(data.createdAt.toDate()),
-      new Date(data.updatedAt.toDate())
-    );
+    return new Item(data.uid, data.name, data.amount, data.value);
   },
 };
