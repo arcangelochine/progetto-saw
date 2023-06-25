@@ -12,6 +12,7 @@ import {
   doc,
   getDocs,
   query,
+  setDoc,
   where,
 } from "firebase/firestore";
 import { User } from "firebase/auth";
@@ -88,5 +89,19 @@ export const createInventory = async (user: User) => {
 export const deleteInventory = async (user: User, docId: string) => {
   return getInventoryOfUser(user, docId).then((snap) => {
     if (snap[0]) return deleteDoc(doc(db, "inventories", snap[0].id));
+  });
+};
+
+export const updateInventory = async (
+  user: User,
+  docId: string,
+  inventory: Inventory
+) => {
+  return getInventoryOfUser(user, docId).then((snap) => {
+    if (snap[0])
+      return setDoc(
+        doc(db, "inventories", snap[0].id).withConverter(inventoryConverter),
+        inventory
+      );
   });
 };
