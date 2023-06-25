@@ -151,7 +151,13 @@ const ItemList = ({
         <Card>
           <CardCenterContent>
             Sembra che il tuo inventario sia vuoto, prova ad{" "}
-            <Underline>aggiungere un oggetto</Underline>
+            <Underline
+              onClick={() => {
+                toFocus.current?.focus();
+              }}
+            >
+              aggiungere un oggetto
+            </Underline>
           </CardCenterContent>
         </Card>
       )}
