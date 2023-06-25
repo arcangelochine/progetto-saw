@@ -53,15 +53,20 @@ export class Record {
       .reduce((sum, item) => sum + item, 0);
 
     // Calcolo la media
-    this._mean = items
-      .map((item) => item.value * item.amount)
-      .reduce((sum, item) => sum + item / this._value, 0);
+    this._mean =
+      this._value /
+      items.map((item) => item.amount).reduce((sum, item) => sum + item, 0);
+    this._mean = parseFloat(this.mean.toFixed(2));
 
     // Calcolo la deviazione standard
     this._deviation = items
-      .map((item) => item.value * item.amount)
-      .reduce((sum, item) => sum + (item - this._mean) ** 2, 0);
-    this._deviation = Math.sqrt(this._deviation);
+      .map((item) => (item.value - this.mean) ** 2)
+      .reduce((sum, item) => sum + item, 0);
+    this._deviation = Math.sqrt(
+      this._deviation /
+        items.map((item) => item.amount).reduce((sum, item) => sum + item, 0)
+    );
+    this._deviation = parseFloat(this.deviation.toFixed(2));
 
     return this;
   }
