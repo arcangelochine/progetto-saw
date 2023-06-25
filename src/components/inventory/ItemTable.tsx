@@ -63,6 +63,7 @@ const ItemTable = () => {
                 inventory.items,
                 inventory.capacity,
                 inventory.value,
+                inventory.history,
                 inventory.createdAt,
                 inventory.updatedAt
               ),
@@ -96,6 +97,8 @@ const ItemTable = () => {
       };
     }
   });
+
+  console.log(inventoryState);
 
   if (!docId) return <></>;
 
