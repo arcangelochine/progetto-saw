@@ -51,7 +51,7 @@ const InventoryCard = ({ inventory, editable = false }: InventoryCardProps) => {
         </CardProperty>
         <CardProperty>
           <Bold>Valore</Bold>
-          <Paragraph>{inventory.computeValue()} €</Paragraph>
+          <Paragraph>{inventory.value} €</Paragraph>
         </CardProperty>
       </CardContent>
       {editable && (
@@ -104,7 +104,7 @@ const InventoryExpansion = ({
   };
 
   if (inventories < maxLength) {
-    // card che punta a un nuovo inventario
+    // card che manda a un nuovo inventario
     return (
       <ClickableCard onClick={() => createInventoryAndNavigate()}>
         <CardCenterContent>
