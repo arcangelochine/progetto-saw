@@ -3,7 +3,7 @@ import {
   SnapshotOptions,
   Timestamp,
 } from "firebase/firestore";
-import { Item } from "./Item";
+import { Item, itemConverter } from "./Item";
 
 function UID(length: number): string {
   const characters = "abcdefghijklmnopqrstuvwxyz0123456789";
@@ -199,7 +199,7 @@ export const inventoryConverter = {
     return {
       name: inventory.name,
       owner: inventory.owner,
-      items: inventory.items,
+      items: inventory.items.map((item) => itemConverter.toFirestore(item)),
       capacity: inventory.capacity,
       value: inventory.value,
       createdAt: Timestamp.fromDate(inventory.createdAt),

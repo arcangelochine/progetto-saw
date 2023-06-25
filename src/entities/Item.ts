@@ -1,3 +1,9 @@
+import {
+  QueryDocumentSnapshot,
+  SnapshotOptions,
+  Timestamp,
+} from "firebase/firestore";
+
 export class Item {
   private _uid: string;
   private _name: string;
@@ -51,9 +57,9 @@ export class Item {
   }
 
   /**
-   * 
+   *
    * @note Aggiorna il campo **updatedAt**
-   * 
+   *
    * @param name Il nuovo nome dell'oggetto
    * @param amount La nuova quantità dell'oggetto
    * @param value Il nuovo valore per unità dell'oggetto
@@ -68,3 +74,31 @@ export class Item {
     return this;
   }
 }
+
+export const itemConverter = {
+  toFirestore: (item: Item) => {
+    return {
+      uid: item.uid,
+      name: item.name,
+      amount: item.amount,
+      value: item.value,
+      createdAt: Timestamp.fromDate(item.createdAt),
+      updatedAt: Timestamp.fromDate(item.updatedAt),
+    };
+  },
+  fromFirestore: (
+    snapshot: QueryDocumentSnapshot,
+    options: SnapshotOptions
+  ) => {
+    const data = snapshot.data(options);
+
+    return new Item(
+      data.uid,
+      data.name,
+      data.amount,
+      data.value,
+      new Date(data.createdAt.toDate()),
+      new Date(data.updatedAt.toDate())
+    );
+  },
+};
