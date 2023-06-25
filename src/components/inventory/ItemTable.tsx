@@ -117,6 +117,7 @@ const ItemTable = () => {
           openModal={setEditionModal}
         />
         <InventorySummary
+          editable
           inventoryState={inventoryState}
           openDeletionModal={setDeletionModal}
           openEditionModal={setInventoryEditionModal}

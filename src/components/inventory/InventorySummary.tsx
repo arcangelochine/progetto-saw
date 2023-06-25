@@ -27,12 +27,14 @@ const PropertyWrapper = styled(Column)`
 `;
 
 interface InventorySummaryProps {
+  editable?: boolean;
   inventoryState: InventoryState;
   openDeletionModal: React.Dispatch<React.SetStateAction<boolean>>;
   openEditionModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const InventorySummary = ({
+  editable = false,
   inventoryState,
   openDeletionModal,
   openEditionModal,
@@ -73,14 +75,16 @@ const InventorySummary = ({
           </PropertyWrapper>
         </SummaryWrapper>
       </CardContent>
-      <CardFooter>
-        <PrimaryButton onClick={() => openEditionModal(true)}>
-          <IconContainer icon={faPenToSquare} />
-        </PrimaryButton>
-        <DangerButton onClick={() => openDeletionModal(true)}>
-          <IconContainer icon={faTrash} />
-        </DangerButton>
-      </CardFooter>
+      {editable && (
+        <CardFooter>
+          <PrimaryButton onClick={() => openEditionModal(true)}>
+            <IconContainer icon={faPenToSquare} />
+          </PrimaryButton>
+          <DangerButton onClick={() => openDeletionModal(true)}>
+            <IconContainer icon={faTrash} />
+          </DangerButton>
+        </CardFooter>
+      )}
     </Card>
   );
 };

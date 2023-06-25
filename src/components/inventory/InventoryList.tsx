@@ -136,11 +136,13 @@ const InventoryExpansion = ({
 interface InventoryListProps {
   editable?: boolean;
   expandable?: boolean;
+  analytics?: boolean;
 }
 
 const InventoryList = ({
   editable = false,
   expandable = false,
+  analytics = false,
 }: InventoryListProps) => {
   const user = useContext(AuthContext);
   const [inventories, setInventories] = useState<Array<Inventory>>(
@@ -162,22 +164,42 @@ const InventoryList = ({
 
   if (user)
     return (
-      <ListContainer>
-        {inventories.map((inventory, index) => {
-          return (
-            <Link key={index} href={`inventory/${inventory.uid}`}>
-              <InventoryCard inventory={inventory} editable={editable} />
-            </Link>
-          );
-        })}
+      <>
+        <ListContainer>
+          {inventories.length === 0 && !expandable && (
+            <Card>
+              <CardCenterContent>
+                Sembra che non hai inventari da visualizzare, prova ad{" "}
+                <Underline>
+                  <Link href="/home">aggiungere un inventario</Link>
+                </Underline>
+              </CardCenterContent>
+            </Card>
+          )}
 
-        {expandable && (
-          <InventoryExpansion
-            premium={premium}
-            inventories={inventories.length}
-          />
-        )}
-      </ListContainer>
+          {inventories.map((inventory, index) => {
+            return (
+              <Link
+                key={index}
+                href={
+                  analytics
+                    ? `analytics/${inventory.uid}`
+                    : `inventory/${inventory.uid}`
+                }
+              >
+                <InventoryCard inventory={inventory} editable={editable} />
+              </Link>
+            );
+          })}
+
+          {expandable && (
+            <InventoryExpansion
+              premium={premium}
+              inventories={inventories.length}
+            />
+          )}
+        </ListContainer>
+      </>
     );
 
   return <></>;
