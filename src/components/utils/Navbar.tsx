@@ -12,7 +12,7 @@ import {
   faChartLine,
   faQuestionCircle,
   faGear,
-  faRightToBracket,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 
 const NavbarContainer = styled(Row)`
@@ -154,12 +154,14 @@ const Navbar = ({ page }: NavbarProps) => {
 
   return (
     <NavbarContainer>
-      <NavbarItem href="/"></NavbarItem>
+      <NavbarItem href="/">
+        
+      </NavbarItem>
       <NavbarItem href="/" style={{ width: "200%" }}>
         <Bold>iSort</Bold>
       </NavbarItem>
       <NavbarItem href="/login" className={`${page === "AUTH" && "active"}`}>
-        <IconContainer icon={faRightToBracket} />
+        <IconContainer icon={faUser} />
       </NavbarItem>
     </NavbarContainer>
   );
