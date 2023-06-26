@@ -98,8 +98,6 @@ const ItemTable = () => {
     }
   });
 
-  console.log(inventoryState);
-
   if (!docId) return <></>;
 
   return (
