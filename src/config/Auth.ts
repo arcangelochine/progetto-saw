@@ -1,8 +1,16 @@
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { auth, db } from "./firebase";
-import { User, userConverter } from "../entities";
+import { User as DBUser, userConverter } from "../entities";
 import {
   Persistence,
+  User,
   browserSessionPersistence,
   createUserWithEmailAndPassword,
   setPersistence,
@@ -10,6 +18,7 @@ import {
   signOut,
   updateProfile,
 } from "firebase/auth";
+import { DocumentNotFoundError } from "./Database";
 
 // Persistenza dell'autenticazione
 const persistence: Persistence = browserSessionPersistence;
@@ -210,7 +219,7 @@ export const register = async (
   if (!isPasswordConfirmed(password, confirm))
     throw new BadCredentialError("NOT_EQUAL", "CONFIRM");
 
-  // Username e password vengono salvati in lower case
+  // Username e email vengono salvati in lower case
   const lower = username.toLowerCase();
   const lowerEmail = email.toLowerCase();
 
@@ -224,7 +233,7 @@ export const register = async (
     return singUp(email, password).then((res) => {
       // Registrazione avvenuta con successo
       // Creo un nuovo utente
-      const user = new User(lower, username, lowerEmail, false, new Date());
+      const user = new DBUser(lower, username, lowerEmail, false, new Date());
 
       // Aggiungo l'utente al database (optimistic programming)
       addDoc(users, user);
@@ -275,4 +284,63 @@ export const login = async (username_or_email: string, password: string) => {
  */
 export const logout = async () => {
   return signOut(auth);
+};
+
+/**
+ *
+ * @param user Istanza dell'utente
+ * @param username Nuovo username
+ * @returns
+ */
+export const updateUsername = async (user: User, username: string) => {
+  // Campi mancanti
+  if (!user) return;
+
+  if (!username.length) throw new BadCredentialError("MISSING", "USERNAME");
+
+  // Nessun cambiamento nel displayName => Nessun cambiamento nello username
+  if (user.displayName === username) return;
+
+  const isUsernameChanged = username.toLocaleLowerCase() !== user.displayName?.toLowerCase();
+
+  // Caratteri speciali non consentiti per lo username
+  if (username.includes("@"))
+    throw new BadCredentialError(undefined, "USERNAME");
+
+  // Username troppo corto
+  if (username.length < MIN_USERNAME_LENGTH)
+    throw new BadCredentialError("TOO_SHORT", "USERNAME");
+
+  // Username troppo lungo
+  if (username.length > MAX_USERNAME_LENGTH)
+    throw new BadCredentialError("TOO_LONG", "USERNAME");
+
+  // Lo username viene salvato in lower case
+  const lower = username.toLowerCase();
+
+  if (!isUsernameChanged) {
+    return updateProfile(user, { displayName: username });
+  }
+
+  // Unicità username (se nuovo)
+  const unique = await isUsernameUnique(lower);
+
+  if (!unique) throw new AlreadyInUseError("USERNAME");
+
+  // Lo username è unico
+  return updateProfile(user, {
+    displayName: username,
+  }).then(async () => {
+    const queryDoc = query(users, where("email", "==", user.email));
+
+    // Cerco il documento dell'utente
+    return getDocs(queryDoc).then((snap) => {
+      // Se lo trovo, lo aggiorno
+      if (!snap.docs) throw new DocumentNotFoundError();
+
+      const docRef = snap.docs[0].ref;
+
+      return updateDoc(docRef, { username: lower });
+    });
+  });
 };
