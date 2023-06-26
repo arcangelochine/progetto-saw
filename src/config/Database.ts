@@ -105,3 +105,13 @@ export const updateInventory = async (
       );
   });
 };
+
+export const deleteAllInventories = async (user: User) => {
+  const queryDoc = query(inventories, where("owner", "==", user.email));
+
+  return getDocs(queryDoc).then((snap) => {
+    snap.forEach((doc) => {
+      return deleteDoc(doc.ref);
+    });
+  });
+};

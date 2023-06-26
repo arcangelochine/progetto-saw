@@ -1,20 +1,27 @@
 import { useContext, useState } from "react";
 import {
   Body,
+  Card,
+  CardFooter,
+  CardHeader,
   Content,
   Form,
   Header,
   InputWithLabel,
   Navbar,
   PrimaryButton,
+  Subtitle,
   Title,
 } from "../components/utils";
 import { AuthContext } from "../core";
 import {
   AlreadyInUseError,
   BadCredentialError,
+  logout,
   updateUsername,
 } from "../config/Auth";
+import { DangerButton } from "../components/utils/Buttons";
+import { DeletionModal } from "../components/user";
 
 const MIN_USERNAME_LENGTH = 3;
 const MAX_USERNAME_LENGTH = 32;
@@ -35,6 +42,8 @@ const User = () => {
   const [usernameErrorMessage, setUsernameErrorMessage] =
     useState(REQUIRED_ERROR);
   const [loading, setLoading] = useState(false);
+
+  const [deletionModal, setDeletionModal] = useState(false);
 
   const submit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -113,26 +122,42 @@ const User = () => {
       </Header>
       <Content>
         {user && (
-          <Form onSubmit={submit}>
-            <InputWithLabel
-              label="Username"
-              isValid={usernameIsValid}
-              errorMessage={usernameErrorMessage}
-              type="text"
-              value={username}
-              maxLength={MAX_USERNAME_LENGTH}
-              onChange={(e) => {
-                setUsername(e.target.value);
-                setUsernameIsValid(true);
-              }}
-              onFocus={() => {
-                setUsernameIsValid(true);
-              }}
-            />
-            <PrimaryButton type="submit">Modifica username</PrimaryButton>
-          </Form>
+          <>
+            <Form onSubmit={submit}>
+              <InputWithLabel
+                label="Username"
+                isValid={usernameIsValid}
+                errorMessage={usernameErrorMessage}
+                type="text"
+                value={username}
+                maxLength={MAX_USERNAME_LENGTH}
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                  setUsernameIsValid(true);
+                }}
+                onFocus={() => {
+                  setUsernameIsValid(true);
+                }}
+              />
+              <PrimaryButton type="submit">Modifica username</PrimaryButton>
+            </Form>
+            <Card>
+              <CardHeader className="dark">
+                <Subtitle>Danger zone</Subtitle>
+              </CardHeader>
+              <CardFooter>
+                <DangerButton onClick={() => setDeletionModal(true)}>
+                  Elimina account
+                </DangerButton>
+                <DangerButton onClick={logout}>Esci</DangerButton>
+              </CardFooter>
+            </Card>
+          </>
         )}
       </Content>
+      {user && deletionModal && (
+        <DeletionModal user={user} closeModal={setDeletionModal} />
+      )}
     </Body>
   );
 };

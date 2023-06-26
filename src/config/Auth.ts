@@ -1,6 +1,7 @@
 import {
   addDoc,
   collection,
+  deleteDoc,
   getDocs,
   query,
   updateDoc,
@@ -9,16 +10,19 @@ import {
 import { auth, db } from "./firebase";
 import { User as DBUser, userConverter } from "../entities";
 import {
+  EmailAuthProvider,
   Persistence,
   User,
   browserSessionPersistence,
   createUserWithEmailAndPassword,
+  deleteUser,
+  reauthenticateWithCredential,
   setPersistence,
   signInWithEmailAndPassword,
   signOut,
   updateProfile,
 } from "firebase/auth";
-import { DocumentNotFoundError } from "./Database";
+import { DocumentNotFoundError, deleteAllInventories } from "./Database";
 
 // Persistenza dell'autenticazione
 const persistence: Persistence = browserSessionPersistence;
@@ -296,12 +300,14 @@ export const updateUsername = async (user: User, username: string) => {
   // Campi mancanti
   if (!user) return;
 
-  if (!username.length) throw new BadCredentialError("MISSING", "USERNAME");
+  if (!username || username.length === 0)
+    throw new BadCredentialError("MISSING", "USERNAME");
 
   // Nessun cambiamento nel displayName => Nessun cambiamento nello username
   if (user.displayName === username) return;
 
-  const isUsernameChanged = username.toLocaleLowerCase() !== user.displayName?.toLowerCase();
+  const isUsernameChanged =
+    username.toLocaleLowerCase() !== user.displayName?.toLowerCase();
 
   // Caratteri speciali non consentiti per lo username
   if (username.includes("@"))
@@ -340,7 +346,44 @@ export const updateUsername = async (user: User, username: string) => {
 
       const docRef = snap.docs[0].ref;
 
-      return updateDoc(docRef, { username: lower });
+      return updateDoc(docRef, { displayName: username, username: lower });
     });
   });
+};
+
+export const removeUser = async (user: User, password: string) => {
+  // Campi mancanti
+  if (!user) return;
+
+  if (!password || password.length === 0) return;
+
+  return reauthenticateWithCredential(
+    user,
+    EmailAuthProvider.credential(user.email!, password)
+  )
+    .then(async () => {
+      // Elimino tutti gli inventari
+      return deleteAllInventories(user).then(async () => {
+        // Elimino l'utente
+        return deleteUser(user)
+          .then(() => {
+            const queryDoc = query(users, where("email", "==", user.email));
+
+            // Elimino il documento relativo all'utente
+            return getDocs(queryDoc).then((snap) => {
+              if (!snap.docs) throw new DocumentNotFoundError();
+
+              const docRef = snap.docs[0].ref;
+
+              return deleteDoc(docRef);
+            });
+          })
+          .catch(() => {
+            throw new ServerError();
+          });
+      });
+    })
+    .catch(() => {
+      throw new ServerError();
+    });
 };
