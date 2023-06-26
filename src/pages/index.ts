@@ -6,7 +6,6 @@ import InventoryTable from "./InventoryTable";
 import Landing from "./Landing";
 import Login from "./Login";
 import Logout from "./Logout";
-import Offline from "./Offline";
 import Pro from "./Pro";
 import Register from "./Register";
 import User from "./User";
@@ -20,7 +19,6 @@ export {
   Landing,
   Login,
   Logout,
-  Offline,
   Pro,
   Register,
   User,

@@ -9,7 +9,6 @@ import {
   Landing,
   Login,
   Logout,
-  //Offline,
   Pro,
   Register,
   User,
