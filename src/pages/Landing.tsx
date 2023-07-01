@@ -42,7 +42,7 @@ const Landing = () => {
     <Body>
       <Navbar page="HOME" />
       <Header>
-        <Title>Landing</Title>
+        <Title>iSort</Title>
       </Header>
       <Content>
         <FeaturesContainer>
